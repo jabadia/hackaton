@@ -10,6 +10,7 @@
 
 		<!-- Loading Flat UI -->
 		<link href="css/flat-ui.css" rel="stylesheet">
+		<link rel="stylesheet" href="css/style.css">
 
 		<link rel="shortcut icon" href="images/favicon.ico">
 
@@ -27,9 +28,19 @@
 				</h1>
 			</div>
 
+			<div>
 			<video id="video" width="320" height="240" autoplay></video>
 			<button id="snap">Capturar!</button>
+			<div id="face-canvas">
 			<canvas id="canvas" width="320" height="240"></canvas>
+			</div>
+			</div>
+			<div>
+				<span id="faces-count"></span><br />
+				<ul id="faces">
+					
+				</ul>
+			</div>
 		</div>
 
 		<!-- Load JS here for greater good =============================-->

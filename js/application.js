@@ -1,24 +1,7 @@
-(function($) {
-  "use strict";
+"use strict";
 
-
-  function dataURLtoBlob(dataUrl) 
-  {
-    // Decode the dataURL    
-    var binary = atob(dataUrl.split(',')[1]);
-
-    // Create 8-bit unsigned array
-    var array = [];
-    for (var i = 0; i < binary.length; i++) {
-      array.push(binary.charCodeAt(i));
-    }
-
-    // Return our Blob object
-    return new Blob([new Uint8Array(array)], {
-      type: 'image/png'
-    });
-  }
- 
+function initWebcam()
+{ 
   var canvas = $('#canvas').get(0);
   console.log(canvas);
   var context = canvas.getContext("2d");
@@ -45,7 +28,24 @@
     }, errBack);
   }
 
-  $("#snap").click( function()
+  function dataURLtoBlob(dataUrl) 
+  {
+    // Decode the dataURL    
+    var binary = atob(dataUrl.split(',')[1]);
+
+    // Create 8-bit unsigned array
+    var array = [];
+    for (var i = 0; i < binary.length; i++) {
+      array.push(binary.charCodeAt(i));
+    }
+
+    // Return our Blob object
+    return new Blob([new Uint8Array(array)], {
+      type: 'image/png'
+    });
+  }
+
+  function captureAndRecognize()
   {
     context.drawImage(video,0,0,320,240);
     var data = canvas.toDataURL();
@@ -66,12 +66,50 @@
       data: post_data,
       processData: false,
       contentType: false,
-    }).done(function(o)
+      dataType: 'json',
+    }).done(function(result)
     {
       console.log('done');
-      var result = JSON.parse(o);
       console.log(result);
-    });
-  });
+
+      if( result.face_detection && result.face_detection.length > 0 )
+      {
+        $('#faces-count').html( result.face_detection.length + " caras detectadas");
+        $("#faces").empty();
+        result.face_detection.forEach( function(face)
+        {
+          var li = $('<li>');
+          li.append( (face.sex? "Hombre": "Mujer") + "<br />");
+          if( face.smile < 0.35 )
+            li.append( "Serio" );
+          else if( face.smile < 0.85 )
+            li.append( "Neutral" );
+          else
+            li.append("Sonriente");
+          $("#faces").append(li);
+
+          var face_area = $('<div>');
+          face_area.css('position','absolute');
+          face_area.addClass('face-outline');
+          face_area.css({
+            'left': face.boundingbox.tl.x,
+            'top' : face.boundingbox.tl.y,
+            'width': face.boundingbox.size.width,
+            'height': face.boundingbox.size.height});          
+          $("#face-canvas").append(face_area);
+        });
+      }
+    });  
+  };
+
+  $("#snap").click( captureAndRecognize );
+}
+
+
+(function($) {
+  "use strict";
+
+  initWebcam();
+
 
 })(jQuery);

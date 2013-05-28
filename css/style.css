@@ -1,0 +1,10 @@
+#face-canvas
+{
+	position: relative;
+}
+
+.face-outline
+{
+	border: 1px solid red;
+	z-index: 3;
+}
