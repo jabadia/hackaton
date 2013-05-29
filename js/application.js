@@ -76,6 +76,7 @@ function initWebcam()
       {
         $('#faces-count').html( result.face_detection.length + " caras detectadas");
         $("#faces").empty();
+        $(".face-outline").remove();
         result.face_detection.forEach( function(face)
         {
           var li = $('<li>');
