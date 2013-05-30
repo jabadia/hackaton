@@ -131,7 +131,9 @@ function bufferizar(){
 		params.geometries = [ ptAct ];
 
 		//buffer in linear units such as meters, km, miles etc.
-		params.distances = [5];
+		//params.distances = [$("input[name='field-sex']").attr('value')];
+		var valorBuff =$("input[name='distanciaBuffer']").attr('value');
+		params.distances = JSON.parse("[" + valorBuff + "]");
 		params.unit = esri.tasks.GeometryService.UNIT_KILOMETER;
 		params.outSpatialReference = map.spatialReference;
 		geometryService.buffer(params, showBuffer);
@@ -156,32 +158,26 @@ function showBuffer(geometries) {
 }		
 
 function queryElement(bufferGeometry) {
-	//query =  "http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer";
-
-	/*featureLayer.selectFeatures(query, esri.layers.FeatureLayer.SELECTION_NEW, function(results){
-
-    });*/
-
-	/*var strQuery = "";
-	if SEXO == "Hombre"*/ 
-
 	var queryTask = new esri.tasks.QueryTask("http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer/0");		
 	var query = new esri.tasks.Query();		
 	query.returnGeometry = true;
-	query.where = 'SEXO = "' + $("input[name='field-sex']").attr('value') + '" AND QUIERO = "' + $("input[name='field-quiero']").attr('value') + '"' ;		
+	query.where = "SEXO = '" + $("input[name='field-sex']").attr('value') + "' AND QUIERO = '" + $("input[name='field-quiero']").attr('value') + "'" ;	
 	query.outFields = ["*"];
 	query.geometry = bufferGeometry;
 	queryTask.execute(query, showResultsInfo, error_showResultsInfo);
-
 }
 
 function showResultsInfo(featureSet) {
 	//remove all graphics on the maps graphics layer
-	lyrGraphicSelect.clear();
-
 	if( featureSet.features.length > 0)
 	{
-		var symbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DASHDOT, new dojo.Color([255,0,0]), 2);
+		var symbol = new esri.symbol.SimpleMarkerSymbol(
+          esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE, 12, 
+          new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_NULL, 
+          new dojo.Color([247, 34, 101, 0.9]), 1),
+          new dojo.Color([207, 34, 171, 0.5])
+        );
+
 		dojo.forEach(featureSet.features,function(feature) {
 			var graphic = feature;
 			graphic.setSymbol(symbol);
@@ -193,6 +189,7 @@ function showResultsInfo(featureSet) {
 
 function error_showResultsInfo(featureSet) {
 	// algún error
+	alert("error en query");
 }
 
 dojo.ready(init);
