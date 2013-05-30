@@ -52,12 +52,12 @@
 		<div class="row">
 
 			<div class="span5">
-				<label for="field-sex">¿Qu&eacute; quieres, monada?</label>
-				<div class="toggle sex-control">
-	                <label class="toggle-radio" for="field-sex-male">Quiero cari&ntilde;o</label>
-	                <input type="radio" name="field-sex" id="field-sex-male" value="quiero">
-	                <label class="toggle-radio" for="field-sex-female">Dame cari&ntilde;o</label>
-	                <input type="radio" name="field-sex" id="field-sex-female" value="dame"  checked="checked">
+				<label for="ffield-quiero">¿Qu&eacute; quieres, monada?</label>
+				<div class="toggle quiero-control">
+	                <label class="toggle-radio" for="field-quiero-male">Quiero cari&ntilde;o</label>
+	                <input type="radio" name="field-quiero" id="field-quiero-male" value="Hacer feliz">
+	                <label class="toggle-radio" for="field-quiero-female">Dame cari&ntilde;o</label>
+	                <input type="radio" name="field-quiero" id="field-quiero-female" value="Que me hagan feliz"  checked="checked">
 	            </div>
 	                
 			</div>
@@ -75,8 +75,9 @@
 		<div class="row">
 			<div class="span12">
 				<label style="display: inline; padding-right: 5px;" for="field-sex">a </label>
-				<input style="display: inline; width: 46px;" type="number" value="5">
+				<input name="distanciaBuffer" style="display: inline; width: 46px;" type="number" value="5">
 				<label style="display: inline; padding-left: 5px;" for="field-sex"> Kil&oacute;metros.</label>
+				<button id="buscar">Buscar</button>
 			</div>
 		</div>
 		
@@ -92,8 +93,7 @@
 	<div class="row">
 		<div class="span5">
 			<button id="localizar" >Localizar Autom&aacute;ticamente</button>
-			<button id="adedo" >Localizar a dedo</button>
-			<button id="buscar" >Buscar</button>
+			<button id="adedo">Localizar a dedo</button>
 		</div>
 	</div>
 
@@ -134,6 +134,12 @@
       </div>		
 	</footer>
 
+	
+	<!-- script de esr -->
+	<script src="http://serverapi.arcgisonline.com/jsapi/arcgis/3.5/"></script>
+	<script src="js/search.js"></script>
+	<script type="text/javascript">djConfig = { parseOnLoad:true };</script>
+
 	<!-- Load JS here for greater good =============================-->
 	<script src="js/jquery-1.8.3.min.js"></script>
 	<script src="js/jquery-ui-1.10.3.custom.min.js"></script>
@@ -146,13 +152,16 @@
 	<script src="js/jquery.tagsinput.js"></script>
 	<script src="js/jquery.placeholder.js"></script>
 	<script src="js/jquery.stacktable.js"></script>
-	<script src="http://vjs.zencdn.net/c/video.js"></script>
-	<script src="js/common.js"></script>
+	<script src="js/custom_checkbox_and_radio.js"></script>
+    <script src="js/custom_radio.js"></script>
+	<!-- <script src="http://vjs.zencdn.net/c/video.js"></script>-->
 
-	<!-- script de esr -->
-	<script src="http://serverapi.arcgisonline.com/jsapi/arcgis/3.5/"></script>
+
+	<!-- page specific -->
+	<script src="js/common.js"></script>
+	<!--script src="js/register.js"></script-->
 	<script src="js/search.js"></script>
-	<script type="text/javascript">djConfig = { parseOnLoad:true };</script>
+
 	
 </body>
 </html>

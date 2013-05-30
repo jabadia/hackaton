@@ -28,10 +28,9 @@ $("#adedo").click(function() {
 
 function init() {
 	map = new esri.Map("map",{
-		basemap:"streets",
-		center:[-71.121865, 42.370011],
-		zoom:13,
-		sliderStyle:"small"
+		basemap: "streets", 
+		center: [-3.9552, 40.3035],
+    	zoom: 5
 	});
 
 	lyrGraphicSelect = new esri.layers.GraphicsLayer();
@@ -46,11 +45,7 @@ function init() {
 	});
 
 	map.addLayer(featureLayer);
-	/*var basemapGallery = new esri.dijit.BasemapGallery({
-		showArcGISBasemaps: true,
-		map: map
-	}, "basemapGallery");
-	basemapGallery.startup();*/
+	
 
 }
 
@@ -91,9 +86,10 @@ function activarClickOnMap() {
 	var handle = dojo.connect(map, "onClick", function(evt) {
 		map.graphics.clear();
 		map.infoWindow.hide();
-		var pt = esri.geometry.geographicToWebMercator(new esri.geometry.Point(evt.mapPoint));
+		//var pt = esri.geometry.geographicToWebMercator(new esri.geometry.Point(evt.mapPoint));
+		var pt = evt.mapPoint;
 		addGraphic(pt);
-		map.centerAndZoom(pt, 12);
+		map.centerAndZoom(pt, 18);
 		ptAct=pt;
 		dojo.disconnect(handle);
 	});
@@ -103,7 +99,7 @@ function activarClickOnMap() {
 function zoomToLocation(location) {
 	var pt = esri.geometry.geographicToWebMercator(new esri.geometry.Point(location.coords.longitude, location.coords.latitude));
 	addGraphic(pt);
-	map.centerAndZoom(pt, 12);
+	map.centerAndZoom(pt, 18);
 	ptAct=pt;
 }
 
@@ -115,7 +111,8 @@ function addGraphic(pt){
 		new dojo.Color([210, 105, 30, 0.9])
 	);
 	graphic = new esri.Graphic(pt, symbol);
-	map.graphics.add(graphic);
+	//map.graphics.add(graphic);
+	lyrGraphicSelect.add(graphic);
 
 }
 
@@ -131,7 +128,9 @@ function bufferizar(){
 		params.geometries = [ ptAct ];
 
 		//buffer in linear units such as meters, km, miles etc.
-		params.distances = [5];
+		//params.distances = [$("input[name='field-sex']").attr('value')];
+		var valorBuff =$("input[name='distanciaBuffer']").attr('value');
+		params.distances = JSON.parse("[" + valorBuff + "]");
 		params.unit = esri.tasks.GeometryService.UNIT_KILOMETER;
 		params.outSpatialReference = map.spatialReference;
 		geometryService.buffer(params, showBuffer);
@@ -156,43 +155,31 @@ function showBuffer(geometries) {
 }		
 
 function queryElement(bufferGeometry) {
-	//query =  "http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer";
-
-	/*featureLayer.selectFeatures(query, esri.layers.FeatureLayer.SELECTION_NEW, function(results){
-
-    });*/
-
-	/*var strQuery = "";
-	if SEXO == "Hombre"*/ 
-
-	var queryTask = new esri.tasks.QueryTask(userConfig.datosParoURL);		
+	var queryTask = new esri.tasks.QueryTask("http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer/0");		
 	var query = new esri.tasks.Query();		
 	query.returnGeometry = true;
-	query.where = 'SEXO = ' + $("input[name='field-sex']").attr('value') + ' AND QUIERO = ' + $("input[name='field-quiero']").attr('value') ;		
+	query.where = "SEXO = '" + $("input[name='field-sex']").attr('value') + "' AND QUIERO = '" + $("input[name='field-quiero']").attr('value') + "'" ;	
 	query.outFields = ["*"];
 	query.geometry = bufferGeometry;
 	queryTask.execute(query, showResultsInfo, error_showResultsInfo);
-
 }
 
 function showResultsInfo(featureSet) {
 	//remove all graphics on the maps graphics layer
-	lyrGraphicSelect.clear();
-
 	if( featureSet.features.length > 0)
 	{
-		var symbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DASHDOT, new dojo.Color([255,0,0]), 2);
 		dojo.forEach(featureSet.features,function(feature) {
-			var graphic = feature;
-			graphic.setSymbol(symbol);
-			lyrGraphicSelect.add(graphic);
-			
+			var graphic = new esri.Graphic(feature.geometry);
+			//lyrGraphicSelect.add(graphic);
+			//addGraphic(feature.geometry);
+			lyrGraphicSelect.add(feature.geometry);
 		});
 	}
 }
 
 function error_showResultsInfo(featureSet) {
 	// algún error
+	alert("error en query");
 }
 
 dojo.ready(init);
