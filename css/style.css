@@ -46,6 +46,21 @@ footer
 #face-canvas
 {
 	position: relative;
+	height: 220px;
+}
+
+#video
+{
+	position: absolute;
+	background: #ddd;
+}
+
+#canvas
+{
+	position: absolute;
+	background: #00d;
+	z-index:2;
+	opacity:0;
 }
 
 .face-outline
@@ -54,17 +69,4 @@ footer
 	z-index: 3;
 }
 
-#video
-{
-	background: #ddd;
-}
 
-#canvas
-{
-	background: #ddd;
-}
-
-#snap
-{
-	margin: 100px auto;
-}
