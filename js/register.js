@@ -86,6 +86,8 @@ function initWebcam()
       console.log('done');
       console.log(result);
 
+      var is_sad = false;
+
       if( result.face_detection && result.face_detection.length > 0 )
       {
         $('#faces-count').html( result.face_detection.length + " caras detectadas");
@@ -108,6 +110,8 @@ function initWebcam()
 
           var is_male = (face.sex > 0.5)? true : false;
           setChecks(is_male);
+
+          is_sad = (face.smile < 0.6);
   
 
           /* cuadro */
@@ -126,7 +130,7 @@ function initWebcam()
       window.setTimeout(function()
       {
         $('#canvas').css('opacity',0);
-        $('#capture').html('¿Quieres probar de nuevo?')
+        $('#capture').html(is_sad? '¡¡ Sonrie y vuelve a intentarlo !!' : '¡¡Muy bien!!')
           .removeClass('disabled')
           .addClass('btn-default');
         $(".face-outline").remove();
