@@ -106,10 +106,25 @@ footer
 .loveTitle
 {
 	color: #8e44ad;
+	position: absolute; 
+	top: 90px;
+	
+}
+
+.loveHereLogo
+{
+	position: absolute; 
+	top: 40px;
 }
 
 .searchMap
 {
 	width: 960px;
+}
+
+.homeLogin
+{
+	height: 12px;
+	width: 124px;
 }
 
