@@ -2,24 +2,40 @@
 <html lang="es">
 <head>
 	<meta charset="UTF-8">
-	<title>Demo App</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-		<!-- Loading Bootstrap -->
-		<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
-
-		<!-- Loading Flat UI -->
-		<link href="css/flat-ui.css" rel="stylesheet">
-		<link rel="stylesheet" href="css/style.css">
-
-		<link rel="shortcut icon" href="images/favicon.ico">
-
-		<!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
-		<!--[if lt IE 9]>
-			<script src="js/html5shiv.js"></script>
-		<![endif]-->
+	<title>Registrar Usuario</title>
 </head>
-<body class="home-page">
+<body class="register-page">
+
+		<div class="container">
+			<div class="demo-headline">
+				<h1 class="demo-logo">
+				Demo App
+				</h1>
+			</div>
+
+			<div class="row">
+				<div class="span5">
+					<video id="video" width="320" height="240" autoplay></video>
+				</div>
+				<div class="span2">
+					<button id="snap">Capturar!</button>
+				</div>
+				<div class="span5">
+					<div id="face-canvas">
+						<canvas id="canvas" width="320" height="240"></canvas>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="span5 offset7">
+					<span id="faces-count"></span><br />
+					<ul id="faces">
+						
+					</ul>
+				</div>
+			</div>
+		</div>
 
 
 	<!-- Load JS here for greater good =============================-->
@@ -36,6 +52,7 @@
 	<script src="js/jquery.stacktable.js"></script>
 	<script src="http://vjs.zencdn.net/c/video.js"></script>
 	<script src="js/common.js"></script>
-	<script src="js/home.js"></script>
+	<script src="js/register.js"></script>
+
 </body>
 </html>
