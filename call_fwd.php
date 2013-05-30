@@ -1,5 +1,5 @@
 <?php
-  //  header("content-type: text/xml");
+    header("content-type: text/xml");
 // +34518880963
 
 	$objectid= isset($_GET['objectid'])? $_GET['objectid'] : 0;
@@ -17,8 +17,7 @@
     $number = "656466110";
 
 ?>
-<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <Response>
   <Say>Welcome to LoveHere Dot Com</Say>
-  <Dial callerId="+34518880963">+34<?php print $number ?></Dial>
+  <Dial callerId="+34518880946">+34<?php print $number ?></Dial>
 </Response>
