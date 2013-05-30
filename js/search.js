@@ -22,6 +22,10 @@ $("#buscar").click(function() {
 	bufferizar();
 });
 
+$("#adedo").click(function() {
+	activarClickOnMap();
+});
+
 function init() {
 	map = new esri.Map("map",{
 		basemap:"streets",
