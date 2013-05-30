@@ -106,6 +106,15 @@ footer
 .loveTitle
 {
 	color: #8e44ad;
+	position: absolute; 
+	top: 70px;
+	
+}
+
+.loveHereLogo
+{
+	position: absolute; 
+	top: 40px;
 }
 
 .searchMap
