@@ -61,22 +61,22 @@ function localizacionActual() {
  function locationError(error) {
 	switch (error.code) {
 		case error.PERMISSION_DENIED:
-			alert("Sin permisos de localización");
+			alert("Sin permisos de localización - selecciona un punto en el mapa");
 			activarClickOnMap();
 			break;
 		
 		case error.POSITION_UNAVAILABLE:
-			alert("Localización no disponible");
+			alert("Localización no disponible - selecciona un punto en el mapa");
 			activarClickOnMap();
 			break;
 
 		case error.TIMEOUT:
-			alert("Finalizado el tiempo de espera");
+			alert("Finalizado el tiempo de espera - selecciona un punto en el mapa");
 			activarClickOnMap();
 			break;
 
 		default:
-			alert("Error desconocido");
+			alert("Error desconocido - selecciona un punto en el mapa");
 			activarClickOnMap();
 			break;
 	}
@@ -84,12 +84,12 @@ function localizacionActual() {
 
 function activarClickOnMap() {
 	var handle = dojo.connect(map, "onClick", function(evt) {
+		lyrGraphicSelect.clear();
 		map.graphics.clear();
 		map.infoWindow.hide();
-		//var pt = esri.geometry.geographicToWebMercator(new esri.geometry.Point(evt.mapPoint));
 		var pt = evt.mapPoint;
 		addGraphic(pt);
-		map.centerAndZoom(pt, 18);
+		map.centerAndZoom(pt, 17);
 		ptAct=pt;
 		dojo.disconnect(handle);
 	});
@@ -99,7 +99,7 @@ function activarClickOnMap() {
 function zoomToLocation(location) {
 	var pt = esri.geometry.geographicToWebMercator(new esri.geometry.Point(location.coords.longitude, location.coords.latitude));
 	addGraphic(pt);
-	map.centerAndZoom(pt, 18);
+	map.centerAndZoom(pt, 17);
 	ptAct=pt;
 }
 
@@ -111,7 +111,6 @@ function addGraphic(pt){
 		new dojo.Color([210, 105, 30, 0.9])
 	);
 	graphic = new esri.Graphic(pt, symbol);
-	//map.graphics.add(graphic);
 	lyrGraphicSelect.add(graphic);
 
 }
@@ -119,10 +118,14 @@ function addGraphic(pt){
 function bufferizar(){
 	//define input buffer parameters
 	lyrGraphicSelect.clear();
+
+	
+	addGraphic(pt);
+
 	if (ptAct== undefined) {
 		localizacionActual();
 	} else {
-
+	addGraphic(ptAct);
 	var geometryService = new esri.tasks.GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
 		var params = new esri.tasks.BufferParameters();
 		params.geometries = [ ptAct ];
@@ -147,11 +150,14 @@ function showBuffer(geometries) {
 		new dojo.Color([0,0,255,0.35])
 	);
 
+
 	dojo.forEach(geometries, function(geometry) {
 		var graphic = new esri.Graphic(geometry,symbol);
 		lyrGraphicSelect.add(graphic);
 		queryElement(geometry);
+		map.setExtent(geometry.getExtent());
 	});
+
 }		
 
 function queryElement(bufferGeometry) {
