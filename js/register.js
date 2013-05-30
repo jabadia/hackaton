@@ -148,6 +148,7 @@ function initWebcam()
     captureAndRecognize();
   });
 }
+
 function setChecks(is_male)
 {
   console.log(is_male);
@@ -162,7 +163,6 @@ function setChecks(is_male)
 
   checkAllToggles();
 }
-
 
 function addFeature(photo_url)
 {  
@@ -185,16 +185,17 @@ function addFeature(photo_url)
       'BUSCAS': !is_male? "Hombre" : "Mujer",
       'QUIERO': "Que me hagan feliz",
       'FOTO_URL': photo_url,
-      'Edad': $("#field-age").val(),
+      'Edad': Math.floor($("#field-age").val()),
       'Nick': $("#field-nick").val()
     };
 
     var newfeature = new esri.Graphic( geometry, null, attributes );
     console.log(newfeature);
 
-    featureLayer.applyEdits([newfeature],null,null, function()
+    featureLayer.applyEdits([newfeature],null,null, function(o)
       {
         console.log("success");
+        console.log(o);
       },
       function()
       {
