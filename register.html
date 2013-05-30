@@ -68,30 +68,73 @@
 				<div class="span4">
 					<label for="field-picture">Tu foto</label>
 					<video id="video" width="300" height="220" autoplay></video>
+					<button id="capture" class="btn btn-large btn-block btn-default">Capturar y Reconocer</button>
+					
+					<div class="container">
+						<div class="row">
+							<div class="span2">
+								
+								<label for="field-sex">Tu eres</label>
+								<div class="toggle">
+				                  <label class="toggle-radio" for="field-sex-male">Hombre</label>
+				                  <input type="radio" name="field-sex" id="field-sex-male" value="male" checked="checked">
+				                  <label class="toggle-radio" for="field-sex-female">Mujer</label>
+				                  <input type="radio" name="field-sex" id="field-sex-female" value="female">
+				                </div>					
+				                
+							</div>
+							<div class="span2">
+
+								<label for="field-age">Edad</label>
+								<input type="number" placeholder="tu edad actual">
+								
+							</div>
+						</div>
+					</div>
 				</div>
 <!--
-					sexo
-					buscas
 					quiero
 					foto
 					edad
 -->
 				<div class="span4">
-					<label for="field-sex">Sexo</label>
-					<div class="toggle">
-	                  <label class="toggle-radio" for="field-sex-male">Hombre</label>
-	                  <input type="radio" name="field-sex" id="field-sex-male" value="male" checked="checked">
-	                  <label class="toggle-radio" for="field-sex-female">Mujer</label>
-	                  <input type="radio" name="field-sex" id="field-sex-female" value="female">
-	                </div>					
+
+	                <label for="field-iminterestedin">Estás buscando conocer</label>
+					<div class="container iminterestedin">
+						<div class="row">
+							<div class="span2">
+
+				                <p>Hombres</p>
+								<div class="toggle toggle-icon">
+				                  <label class="toggle-radio fui-checkmark-16" for="interested-in-men-false"></label>
+				                  <input type="radio" name="interested-in-men-true" id="interested-in-men-true" value="interested-in-men-true" checked="checked">
+				                  <label class="toggle-radio fui-cross-16" for="interested-in-men-true"></label>
+				                  <input type="radio" name="interested-in-men-false" id="interested-in-men-false" value="interested-in-men-false">
+				                </div>					
+								
+							</div>
+							<div class="span2">
+
+				                <p>Mujeres</p>
+								<div class="toggle toggle-icon">
+				                  <label class="toggle-radio fui-checkmark-16" for="interested-in-women-false"></label>
+				                  <input type="radio" name="interested-in-women-true" id="interested-in-women-true" value="interested-in-women-true" checked="checked">
+				                  <label class="toggle-radio fui-cross-16" for="interested-in-women-true"></label>
+				                  <input type="radio" name="interested-in-women-false" id="interested-in-women-false" value="interested-in-women-false">
+				                </div>					
+
+							</div>
+						</div>
+
+					</div>
 					<label for="field-aboutyou">Sobre ti</label>
 					<textarea name="field-aboutyou" id="aboutyou" cols="30" rows="5"></textarea>
 				</div>
 			</div>
 			</div>
 			<div class="row">
-				<div class="span4 offset8">
-					<a href="#" class="btn btn-large btn-block btn-primary">¡Estoy Listo!</a>				
+				<div class="span6 offset3">
+					<button class="btn btn-large btn-block btn-primary">¡Estoy Listo!</button>
 				</div>
 			</div>
 		</form>
@@ -180,7 +223,7 @@
 	<script src="js/jquery.stacktable.js"></script>
 	<script src="js/custom_checkbox_and_radio.js"></script>
     <script src="js/custom_radio.js"></script>
-	<script src="http://vjs.zencdn.net/c/video.js"></script>
+	<!-- <script src="http://vjs.zencdn.net/c/video.js"></script>-->
 	<script src="js/common.js"></script>
 	<script src="js/register.js"></script>
 

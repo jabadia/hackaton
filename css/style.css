@@ -21,10 +21,25 @@ footer
 {
 	width: 286px;
 }
+#register-form input[type="number"]
+{
+	width: 126px;
+}
 
 #register-form textarea
 {
 	width: 276px;
+}
+
+.iminterestedin p
+{
+	margin-bottom: 5px;
+}
+
+#capture
+{
+	margin-top: 10px;
+	margin-bottom: 20px;
 }
 
 
