@@ -107,7 +107,7 @@ footer
 {
 	color: #8e44ad;
 	position: absolute; 
-	top: 70px;
+	top: 90px;
 	
 }
 
@@ -120,5 +120,11 @@ footer
 .searchMap
 {
 	width: 960px;
+}
+
+.homeLogin
+{
+	height: 12px;
+	width: 124px;
 }
 
