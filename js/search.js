@@ -89,7 +89,7 @@ function activarClickOnMap() {
 		//var pt = esri.geometry.geographicToWebMercator(new esri.geometry.Point(evt.mapPoint));
 		var pt = evt.mapPoint;
 		addGraphic(pt);
-		map.centerAndZoom(pt, 12);
+		map.centerAndZoom(pt, 18);
 		ptAct=pt;
 		dojo.disconnect(handle);
 	});
@@ -99,7 +99,7 @@ function activarClickOnMap() {
 function zoomToLocation(location) {
 	var pt = esri.geometry.geographicToWebMercator(new esri.geometry.Point(location.coords.longitude, location.coords.latitude));
 	addGraphic(pt);
-	map.centerAndZoom(pt, 12);
+	map.centerAndZoom(pt, 18);
 	ptAct=pt;
 }
 
@@ -111,7 +111,8 @@ function addGraphic(pt){
 		new dojo.Color([210, 105, 30, 0.9])
 	);
 	graphic = new esri.Graphic(pt, symbol);
-	map.graphics.add(graphic);
+	//map.graphics.add(graphic);
+	lyrGraphicSelect.add(graphic);
 
 }
 
