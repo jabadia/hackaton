@@ -199,8 +199,8 @@ function addFeature(photo_url)
       function()
       {
         console.log("error");
-      }); 
-  })
+      }
+    ); 
 }
 
 
@@ -232,7 +232,7 @@ function initForm()
       console.log('no-photo');
       addFeature('no-photo');
     }
-
+  });
 }
 
 function initMap()
