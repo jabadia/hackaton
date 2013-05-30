@@ -7,6 +7,7 @@ dojo.require("dojo.parser");
 var users_fs = "http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer/0";
 var map;
 var featureLayer;
+var photo;
 
 function initWebcam()
 { 
@@ -65,6 +66,7 @@ function initWebcam()
     context.drawImage(video,0,0,300,220);
     $('#canvas').css('opacity',1);
     var data = canvas.toDataURL();
+    photo = data;
     var file = dataURLtoBlob(data);
     var size = file.size;
 
@@ -162,13 +164,8 @@ function setChecks(is_male)
 }
 
 
-function initForm()
-{
-  $('#field-nick').focus();
-  $('#goforit').click(function(e)
-  {
-    e.preventDefault();
-
+function addFeature(photo_url)
+{  
     // var formData = $('form').serializeArray();
     // console.log(formData);
     var form = $('#register-form');
@@ -187,7 +184,7 @@ function initForm()
       'SEXO': is_male? "Hombre" : "Mujer",
       'BUSCAS': !is_male? "Hombre" : "Mujer",
       'QUIERO': "Que me hagan feliz",
-      'FOTO_URL': 'no-url',
+      'FOTO_URL': photo_url,
       'Edad': $("#field-age").val(),
       'Nick': $("#field-nick").val()
     };
@@ -204,6 +201,38 @@ function initForm()
         console.log("error");
       }); 
   })
+}
+
+
+function initForm()
+{
+  $('#field-nick').focus();
+  $('#goforit').click(function(e)
+  {
+    e.preventDefault();
+
+    // subo la imagen
+    var photo_url = "";
+    if( photo )
+    {
+      $.ajax({
+        type: "POST",
+        url: "upload.php",
+        data: { imgBase64: photo }
+      }).done(function(o)
+      {
+        console.log('saved');
+        console.log(o);
+        photo_url = o;
+        addFeature(photo_url);
+      });      
+    }
+    else
+    {
+      console.log('no-photo');
+      addFeature('no-photo');
+    }
+
 }
 
 function initMap()
