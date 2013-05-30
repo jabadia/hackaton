@@ -54,7 +54,7 @@
 		<div class="row">
 
 			<div class="span5">
-				<label for="field-quiero">Busco:</label>
+				<label for="field-sex">¿Qu&eacute; quieres monada?</label>
 				<div class="toggle sex-control">
 	                <label class="toggle-radio" for="field-sex-male">Quiero cari&ntilde;o</label>
 	                <input type="radio" name="field-sex" id="field-sex-male" value="quiero">
@@ -64,7 +64,7 @@
 	                
 			</div>
 			<div class="span5">
-				<label for="field-sex">Sexo</label>
+				<label for="field-sex">¿Con quien?</label>
 				<div class="toggle sex-control">
                   <label class="toggle-radio" for="field-sex-male">Hombre</label>
                   <input type="radio" name="field-sex" id="field-sex-male" value="male" checked="checked">
@@ -72,10 +72,19 @@
                   <input type="radio" name="field-sex" id="field-sex-female" value="female">
                 </div>					
 			</div>
-			<div class="span5">
+		</div>
+		
+		<div class="row">
+			<div class="span10">
+				<label for="field-sex">a </label>
+				<input type="number" value="5"> 
+				<label for="field-sex"> Kil&oacutee;metros.</label>
+			</div>
+		<div>
+		
+		<div class="row">
+			<div class="span10">
 					<div id="map">			
-						
-
 					</div>
 			</div>
 		</div>
@@ -144,6 +153,7 @@
 	<!-- script de esr -->
 	<script src="http://serverapi.arcgisonline.com/jsapi/arcgis/3.5/"></script>
 	<script src="js/search.js"></script>
+	<script type="text/javascript">djConfig = { parseOnLoad:true };</script>
 	
 </body>
 </html>

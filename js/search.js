@@ -2,15 +2,16 @@ dojo.require("esri.map");
 dojo.require("esri.layers.FeatureLayer");
 dojo.require("esri.tasks.query")
 dojo.require("esri.tasks.geometry");
-dojo.require("esri.layers.FeatureLayer");
+
 dojo.require("dojo.parser");
 dojo.require("esri.dijit.BasemapGallery");
 
 var map;
 var graphic;
 var currLocation;
-var watchId;
 var ptAct;
+var featureLayer;
+var lyrGraphicSelect;
 
 
 $("#localizar").click(function() {
@@ -29,6 +30,18 @@ function init() {
 		sliderStyle:"small"
 	});
 
+	lyrGraphicSelect = new esri.layers.GraphicsLayer();
+	map.addLayer(lyrGraphicSelect);
+
+	var infoTemplate = new esri.InfoTemplate("${NOMBRE}", '<img src="${FOTO_URL}" alt="${SOBRE_TI}" height="42" width="42">');
+
+	featureLayer = new esri.layers.FeatureLayer("http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer/0",{
+		mode: esri.layers.FeatureLayer.MODE_ONSELECT,
+		outFields: ["*"],
+		infoTemplate: infoTemplate
+	});
+
+	map.addLayer(featureLayer);
 	/*var basemapGallery = new esri.dijit.BasemapGallery({
 		showArcGISBasemaps: true,
 		map: map
@@ -87,6 +100,7 @@ function addGraphic(pt){
 
 function bufferizar(){
 	//define input buffer parameters
+	lyrGraphicSelect.clear();
 	if (ptAct== "undefined") {
 		localizacionActual();
 	} else {
@@ -96,7 +110,7 @@ function bufferizar(){
 		params.geometries = [ ptAct ];
 
 		//buffer in linear units such as meters, km, miles etc.
-		params.distances = [ 5];
+		params.distances = [5];
 		params.unit = esri.tasks.GeometryService.UNIT_KILOMETER;
 		params.outSpatialReference = map.spatialReference;
 		geometryService.buffer(params, showBuffer);
@@ -115,9 +129,45 @@ function showBuffer(geometries) {
 
 	dojo.forEach(geometries, function(geometry) {
 		var graphic = new esri.Graphic(geometry,symbol);
-		map.graphics.add(graphic);
+		lyrGraphicSelect.add(graphic);
+		queryElement(geometry);
 	});
 }		
 
+function queryElement(bufferGeometry) {
+	//query =  "http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer";
+
+	/*featureLayer.selectFeatures(query, esri.layers.FeatureLayer.SELECTION_NEW, function(results){
+
+    });*/
+
+	var queryTask = new esri.tasks.QueryTask(userConfig.datosParoURL);		
+	var query = new esri.tasks.Query();		
+	query.returnGeometry = true;		
+	query.outFields = ["*"];
+	query.geometry = bufferGeometry;
+	queryTask.execute(query, showResultsInfo, error_showResultsInfo);
+
+}
+
+function showResultsInfo(featureSet) {
+	//remove all graphics on the maps graphics layer
+	lyrGraphicSelect.clear();
+
+	if( featureSet.features.length > 0)
+	{
+		var symbol = new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_DASHDOT, new dojo.Color([255,0,0]), 2);
+		dojo.forEach(featureSet.features,function(feature) {
+			var graphic = feature;
+			graphic.setSymbol(symbol);
+			lyrGraphicSelect.add(graphic);
+			
+		});
+	}
+}
+
+function error_showResultsInfo(featureSet) {
+
+}
 
 dojo.ready(init);
