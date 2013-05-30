@@ -47,6 +47,11 @@
     width: 300px;
   }
 
+  .phone_call
+  {
+    
+  }
+
 </style>
 
 <script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
@@ -80,7 +85,7 @@ function init() {
 
   var template = new esri.InfoTemplate();
   template.setTitle("<b>Candidato ${objectid}</b>");
-  template.setContent("<b>Nick:</b> ${Nick}<br/><b>Teléfono: </b><a href='tel:+34518880946'>Llamar</a><br/><img class='user_photo' src='${FOTO_URL}'>");
+  template.setContent("<b>Nick:</b> ${Nick}<br/><b>Teléfono: </b><a class='phone_call' href='tel:+34518880946'>Llamar</a><br/><img class='user_photo' src='${FOTO_URL}'>");
 
   featureLayer = new esri.layers.FeatureLayer(users_fs,{
     mode: esri.layers.FeatureLayer.MODE_ONDEMAND,
