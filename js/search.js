@@ -4,6 +4,7 @@ dojo.require("esri.tasks.query")
 dojo.require("esri.tasks.geometry");
 dojo.require("esri.layers.FeatureLayer");
 dojo.require("dojo.parser");
+dojo.require("esri.dijit.BasemapGallery");
 
 var map;
 var graphic;
@@ -22,11 +23,17 @@ $("#buscar").click(function() {
 
 function init() {
 	map = new esri.Map("map",{
-		basemap:"topo",
+		basemap:"streets",
 		center:[-71.121865, 42.370011],
 		zoom:13,
 		sliderStyle:"small"
 	});
+
+	/*var basemapGallery = new esri.dijit.BasemapGallery({
+		showArcGISBasemaps: true,
+		map: map
+	}, "basemapGallery");
+	basemapGallery.startup();*/
 
 }
 
