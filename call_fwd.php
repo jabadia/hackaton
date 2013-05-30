@@ -18,6 +18,6 @@
 
 ?>
 <Response>
-  <Say>Welcome to LoveHere Dot Com</Say>
+    <Say voice="woman" language="es">Bienvenidos a Lofjiar punto com. Tu llamada sera transferida a la pareja seleccionada sin revelar tu numero</Say>
   <Dial callerId="+34518880946">+34<?php print $number ?></Dial>
 </Response>
