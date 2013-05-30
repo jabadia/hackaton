@@ -224,7 +224,7 @@ function initForm()
       {
         console.log('saved');
         console.log(o);
-        photo_url = o;
+        photo_url = o.split('|')[1];
         addFeature(photo_url);
       });      
     }

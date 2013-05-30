@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=7,IE=9, IE=10">
+<!-- Sets whether a web application runs in full-screen mode. -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<!-- Sets the style of the status bar for a web application. -->
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Mobile Gallery</title>
+
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.0/jquery.mobile-1.3.0.min.css" />
+<link rel="stylesheet" href="http://serverapi.arcgisonline.com/jsapi/arcgis/3.5/js/esri/css/esri.css" />
+
+<style>
+  html, body {
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+  }
+
+  .ui-content {
+    padding: 0 !important;
+  }
+
+  #map {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 0;
+  }
+
+  .esriMobileInfoView 
+  {
+    font-family: Helvetica,sans-serif;
+    font-size: 30px;
+  } 
+  .esriMobileInfoView 
+  {
+    font-family: Helvetica,sans-serif;
+    font-size: 20px;
+    line-height: 1.5em;
+  } 
+  .user_photo {
+    width: 100%;
+  }
+
+</style>
+
+<script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.3.0/jquery.mobile-1.3.0.min.js"></script>
+<script src="http://serverapi.arcgisonline.com/jsapi/arcgis/3.5compact/"></script>
+
+<script>
+dojo.require("esri.map");
+dojo.require("esri.dijit.AttributeInspector-all");
+dojo.require("dijit.form.ComboBox");
+dojo.require("esri.dijit.PopupMobile");
+
+var users_fs = "http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer/0";
+
+var map,
+    featureLayer;
+
+function init() {
+  //This sample requires a proxy page to handle communications with the ArcGIS Server services. You will need to
+  //replace the url below with the location of a proxy on your machine. See the 'Using the proxy page' help topic
+  //for details on setting up a proxy page.
+  //esri.config.defaults.io.proxyUrl = "/arcgisserver/apis/javascript/proxy/proxy.ashx";
+
+  var popup = new esri.dijit.PopupMobile(null, dojo.create("div"));
+  map = new esri.Map('map', {
+    basemap: "gray",
+    center: [-3.9552, 40.3035],
+    zoom: 5,
+    infoWindow:popup
+  });
+
+  var template = new esri.InfoTemplate();
+  template.setTitle("<b>Candidato ${objectid}</b>");
+  template.setContent("<b>Nick:</b> ${Nick}<br/><b>Teléfono: </b>${TELEFONO:formatNumber}<br/><img class='user_photo' src='${FOTO_URL}'>");
+
+  featureLayer = new esri.layers.FeatureLayer(users_fs,{
+    mode: esri.layers.FeatureLayer.MODE_ONDEMAND,
+    infoTemplate:template,
+    outFields: ["*"]
+  });
+  dojo.connect(featureLayer, 'onClick', function (evt) {
+    map.infoWindow.setFeatures([evt.graphic]);
+  });
+
+  map.addLayer(featureLayer);
+  map.infoWindow.resize(185, 100);
+
+  dojo.connect(map, 'onLoad', function (evt) {
+    $(document).ready(jQueryReady);
+  });
+}
+
+function jQueryReady() {
+  //dojo.connect(map, 'onLayersAddResult', initEditor);
+}
+
+
+
+//use the geolocation api to get the current location
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(zoomToLocation, locationError);
+  }
+}
+
+function locationError(error) {
+  switch (error.code) {
+    case error.PERMISSION_DENIED:
+      console.log("Location not provided");
+      break;
+    case error.POSITION_UNAVAILABLE:
+      console.log("Current location not available");
+      break;
+    case error.TIMEOUT:
+      console.log("Timeout");
+      break;
+    default:
+      console.log("unknown error");
+      break;
+  }
+}
+
+function zoomToLocation(location) {
+  var pt = esri.geometry.geographicToWebMercator(new esri.geometry.Point(location.coords.longitude, location.coords.latitude));
+  map.centerAndZoom(pt, 22);
+}
+
+dojo.ready(init);
+</script>
+</head>
+
+<body>
+<div data-role="page" id="page">
+  <!-- header -->
+  <div data-theme="a" data-role="header" data-position="fixed">
+    <h3>Buscar Pareja</h3>
+    <a href="#" data-role="button" onclick="getLocation();">¿Donde?</a>
+    <!--<a href="#featureDialog" data-role="button" class="ui-btn-right">Add</a>-->
+  </div>
+
+  <!-- content -->
+  <div data-role="content">
+    <div id="map"></div>
+  </div>
+</div>
+
+
+<!--Attribute Insepctor Dialog-->
+<div data-role="page" id="attributeDialog" data-theme="b">
+  <!-- header -->
+  <div data-role="header" data-nobackbtn="true">
+    <h1>Collect</h1>
+  </div>
+
+  <div data-role="content" data-inset="true">
+    <div>
+      <div id="currentAddress" style="font-weight:bold;text-align:center;width:100%;"></div>
+    </div>
+    <div id="attributeDiv"></div>
+    <a href="#mapPage" data-role="button">Finish</a>
+  </div>
+</div>
+
+
+<!--Feature Collection Dialog-->
+<div data-role="page" id="featureDialog" data-theme="b">
+  <div data-role="header" data-position="fixed">
+    <h1>Feature Type</h1>
+  </div>
+  <div data-role="content">
+    <ul id="featureList" data-role="listview" data-inset="true"></ul>
+  </div>
+</div>
+</body>
+</html>
