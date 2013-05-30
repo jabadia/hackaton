@@ -46,11 +46,7 @@ function init() {
 	});
 
 	map.addLayer(featureLayer);
-	/*var basemapGallery = new esri.dijit.BasemapGallery({
-		showArcGISBasemaps: true,
-		map: map
-	}, "basemapGallery");
-	basemapGallery.startup();*/
+	
 
 }
 
@@ -91,7 +87,8 @@ function activarClickOnMap() {
 	var handle = dojo.connect(map, "onClick", function(evt) {
 		map.graphics.clear();
 		map.infoWindow.hide();
-		var pt = esri.geometry.geographicToWebMercator(new esri.geometry.Point(evt.mapPoint));
+		//var pt = esri.geometry.geographicToWebMercator(new esri.geometry.Point(evt.mapPoint));
+		var pt = evt.mapPoint;
 		addGraphic(pt);
 		map.centerAndZoom(pt, 12);
 		ptAct=pt;
@@ -171,18 +168,11 @@ function showResultsInfo(featureSet) {
 	//remove all graphics on the maps graphics layer
 	if( featureSet.features.length > 0)
 	{
-		var symbol = new esri.symbol.SimpleMarkerSymbol(
-          esri.symbol.SimpleMarkerSymbol.STYLE_CIRCLE, 12, 
-          new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_NULL, 
-          new dojo.Color([247, 34, 101, 0.9]), 1),
-          new dojo.Color([207, 34, 171, 0.5])
-        );
-
 		dojo.forEach(featureSet.features,function(feature) {
-			var graphic = feature;
-			graphic.setSymbol(symbol);
-			lyrGraphicSelect.add(graphic);
-			
+			var graphic = new esri.Graphic(feature.geometry);
+			//lyrGraphicSelect.add(graphic);
+			//addGraphic(feature.geometry);
+			lyrGraphicSelect.add(feature.geometry);
 		});
 	}
 }
