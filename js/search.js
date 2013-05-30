@@ -28,10 +28,9 @@ $("#adedo").click(function() {
 
 function init() {
 	map = new esri.Map("map",{
-		basemap:"streets",
-		center:[-71.121865, 42.370011],
-		zoom:13,
-		sliderStyle:"small"
+		basemap: "streets", 
+		center: [-3.9552, 40.3035],
+    	zoom: 5
 	});
 
 	lyrGraphicSelect = new esri.layers.GraphicsLayer();
