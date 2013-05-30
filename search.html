@@ -3,8 +3,59 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Buscar Pareja</title>
+	<script src="http://serverapi.arcgisonline.com/jsapi/arcgis/3.5/"></script>
+    <script>
+      dojo.require("esri.map");
+
+      function init() {
+        var map = new esri.Map("map",{
+          basemap:"topo",
+          center:[-122.45,37.75], //long, lat
+          zoom:13,
+          sliderStyle:"small"
+        });
+      }
+
+      dojo.connect(map, "onLoad", initFunc);
+    </script>
 </head>
 <body class="search-page">
+
+		<div class="container">
+			<div class="demo-headline">
+				<h1 class="demo-logo">
+				Buscando el Amor
+				</h1>
+			</div>
+			<div class="row">
+				<div class="span5">
+					<input type="radio" name="rbnNumber" value="1" />Quiero cari&ntilde;o<br/>
+					<input type="radio" name="rbnNumber" value="2" />Dame cari&ntilde;o<br/>
+				</div>
+				<div class="span5">
+					<input type="radio" name="rbnNumber" value="1" />Mujer<br/>
+					<input type="radio" name="rbnNumber" value="2" />Hombre<br/>
+				</div>
+
+				
+				
+				<div class="span5">
+ 					<div id="map"></div>
+				</div>
+				<div class="span2">
+					<button id="buscar" onclick"">Buscar</button>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="span5 offset7">
+					<span id="faces-count"></span><br />
+					<ul id="faces">
+						
+					</ul>
+				</div>
+			</div>
+		</div>
 
 	<!-- Load JS here for greater good =============================-->
 	<script src="js/jquery-1.8.3.min.js"></script>
@@ -21,6 +72,10 @@
 	<script src="http://vjs.zencdn.net/c/video.js"></script>
 	<script src="js/common.js"></script>
 	<script src="js/search.js"></script>
+
+	<!-- script de esr -->
+	<script src="http://serverapi.arcgisonline.com/jsapi/arcgis/3.5/"></script>
+	<script src="/js/search.js"></script>
 	
 </body>
 </html>
