@@ -39,7 +39,7 @@ function init() {
 	var infoTemplate = new esri.InfoTemplate("${NOMBRE}", '<img src="${FOTO_URL}" alt="${SOBRE_TI}" height="42" width="42">');
 
 	featureLayer = new esri.layers.FeatureLayer("http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer/0",{
-		mode: esri.layers.FeatureLayer.MODE_ONSELECT,
+		mode: esri.layers.FeatureLayer.MODE_SNAPSHOT,
 		outFields: ["*"],
 		infoTemplate: infoTemplate
 	});
@@ -120,8 +120,6 @@ function bufferizar(){
 	lyrGraphicSelect.clear();
 
 	
-	addGraphic(pt);
-
 	if (ptAct== undefined) {
 		localizacionActual();
 	} else {
@@ -164,21 +162,51 @@ function queryElement(bufferGeometry) {
 	var queryTask = new esri.tasks.QueryTask("http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer/0");		
 	var query = new esri.tasks.Query();		
 	query.returnGeometry = true;
-	query.where = "SEXO = '" + $("input[name='field-sex']").attr('value') + "' AND QUIERO = '" + $("input[name='field-quiero']").attr('value') + "'" ;	
+
+	var str = "";
+	
+	console.log(document.formu.group1[0].checked);
+	console.log(document.formu2.group2[0].checked);
+	
+	if (document.formu2.group2[0].checked)
+			str = "SEXO = 'Hombre'";
+	else
+			str = "SEXO = 'Mujer'";
+
+
+	var paso2 =  $("input[id='radio4']").attr('checked');
+	//alert (paso2);
+	if (!document.formu.group1[0].checked)
+			str = str + "AND QUIERO = 'Que me hagan feliz'";
+	else
+			str = str + "AND QUIERO = 'Hacer feliz'";
+
+	//query.where = "SEXO = '" + $("input[name='field-sex']").attr('value') + "' AND QUIERO = '" + $("input[name='field-quiero']").attr('value') + "'" ;
+	query.where = str;
+	console.log(query.where);
 	query.outFields = ["*"];
 	query.geometry = bufferGeometry;
 	queryTask.execute(query, showResultsInfo, error_showResultsInfo);
+
+	/*featureLayer.selectFeatures(query, esri.layers.FeatureLayer.SELECTION_NEW, function(results){
+    
+          });*/
 }
 
 function showResultsInfo(featureSet) {
 	//remove all graphics on the maps graphics layer
+
+	//var markerSymbol = new esri.symbol.SimpleMarkerSymbol();
+   var markerSymbol  = new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE, 300,   new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID,    new dojo.Color([255,0,0]), 1),   new dojo.Color([0,255,0,0.25]));
+	alert("se han econtrado "  + featureSet.features.length  + " coincidencias.");
 	if( featureSet.features.length > 0)
 	{
 		dojo.forEach(featureSet.features,function(feature) {
 			var graphic = new esri.Graphic(feature.geometry);
 			//lyrGraphicSelect.add(graphic);
 			//addGraphic(feature.geometry);
-			lyrGraphicSelect.add(feature.geometry);
+			lyrGraphicSelect.add(feature.geometry,markerSymbol);
+
 		});
 	}
 }
