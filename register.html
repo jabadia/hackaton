@@ -67,10 +67,10 @@
 					<input type="email" placeholder="tu dirección de email">
 					<label for="field-phone">Teléfono</label>
 					<input type="tel" placeholder="tu número de teléfono">
+					<label for="field-aboutyou">Sobre ti</label>
+					<textarea name="field-aboutyou" id="aboutyou" cols="30" rows="5"></textarea>
 
-					<div id="map">
-						map!
-					</div>
+
 				</div>
 
 				<div class="span4">
@@ -103,12 +103,7 @@
 								
 							</div>
 						</div>
-					</div>
-				</div>
-
-				<div class="span4">
-
-	                <label for="field-iminterestedin">Estás buscando conocer</label>
+						<label for="field-iminterestedin">Estás buscando conocer</label>
 					<div class="container iminterestedin">
 						<div class="row">
 							<div class="span2">
@@ -130,20 +125,25 @@
 				                  <input type="radio" name="interested-in-women-true" id="interested-in-women-true" value="interested-in-women-true" checked="checked">
 				                  <label class="toggle-radio fui-cross-16" for="interested-in-women-true"></label>
 				                  <input type="radio" name="interested-in-women-false" id="interested-in-women-false" value="interested-in-women-false">
-				                </div>					
-
+				                </div>
 							</div>
 						</div>
+					</div>
 
 					</div>
-					<label for="field-aboutyou">Sobre ti</label>
-					<textarea name="field-aboutyou" id="aboutyou" cols="30" rows="5"></textarea>
+				</div>
+
+				<div class="span4">
+					<label for="field-iminterestedin">¿Dónde estás?</label>
+					<div id="map">
+								map!
+					</div>
 				</div>
 			</div>
 			</div>
 			<div class="row">
 				<div class="span6 offset3">
-					<button class="btn btn-large btn-block btn-primary">¡Estoy Listo!</button>
+					<button class="btn btn-large btn-block btn-danger">¡Estoy Listo!</button>
 				</div>
 			</div>
 		</form>
