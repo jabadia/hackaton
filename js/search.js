@@ -63,21 +63,38 @@ function localizacionActual() {
 	switch (error.code) {
 		case error.PERMISSION_DENIED:
 			alert("Sin permisos de localización");
+			activarClickOnMap();
 			break;
 		
 		case error.POSITION_UNAVAILABLE:
 			alert("Localización no disponible");
+			activarClickOnMap();
 			break;
 
 		case error.TIMEOUT:
 			alert("Finalizado el tiempo de espera");
+			activarClickOnMap();
 			break;
 
 		default:
 			alert("Error desconocido");
+			activarClickOnMap();
 			break;
 	}
 }
+
+function activarClickOnMap() {
+	var handle = dojo.connect(map, "onClick", function(evt) {
+		map.graphics.clear();
+		map.infoWindow.hide();
+		var pt = esri.geometry.geographicToWebMercator(new esri.geometry.Point(evt.mapPoint));
+		addGraphic(pt);
+		map.centerAndZoom(pt, 12);
+		ptAct=pt;
+		dojo.disconnect(handle);
+	});
+}
+
 
 function zoomToLocation(location) {
 	var pt = esri.geometry.geographicToWebMercator(new esri.geometry.Point(location.coords.longitude, location.coords.latitude));
@@ -141,8 +158,8 @@ function queryElement(bufferGeometry) {
 
     });*/
 
-	var strQuery = "";
-	if SEXO == "Hombre" 
+	/*var strQuery = "";
+	if SEXO == "Hombre"*/ 
 
 	var queryTask = new esri.tasks.QueryTask(userConfig.datosParoURL);		
 	var query = new esri.tasks.Query();		
