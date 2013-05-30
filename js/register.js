@@ -4,7 +4,7 @@ dojo.require("esri.layers.FeatureLayer");
 dojo.require("dojo.parser");
 
 var users_fs = "http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer";
-var map = null;
+var map;
 
 function initWebcam()
 { 
@@ -91,6 +91,7 @@ function initWebcam()
         $('#faces-count').html( result.face_detection.length + " caras detectadas");
         result.face_detection.forEach( function(face)
         {
+          $('#capture').html('¡Te hemos reconocido!')
           /*
           var li = $('<li>');
           li.append( (face.sex? "Hombre": "Mujer") + "<br />");
@@ -102,10 +103,12 @@ function initWebcam()
             li.append("Sonriente");
           $("#faces").append(li);
           */
-          if( face.sex > 0.5 )
-          {
 
-          }
+          $("input[name='field-age']").val( face.age );
+
+          var is_male = (face.sex > 0.5)? true : false;
+          setChecks(is_male);
+  
 
           /* cuadro */
           var face_area = $('<div>');
@@ -148,7 +151,7 @@ function initMap()
   common.localizacionActual(zoomToCurrentLocation);  
 
   map = new esri.Map("map", {
-    basemap: "streets",
+    basemap: "gray",
     center: [-3.9552, 40.3035],
     zoom: 5
   });
@@ -157,24 +160,35 @@ function initMap()
 function zoomToCurrentLocation(location) 
 {
   var pt = esri.geometry.geographicToWebMercator(new esri.geometry.Point(location.coords.longitude, location.coords.latitude));
-  userLocation = pt;
   if( map.loaded )
-    map.centerAndZoom(pt,12);
+    map.centerAndZoom(pt,16);
   else
-    dojo.connect(map, "onLoad", function()  {  map.centerAndZoom(pt,14); });
-
-  /*
-  addGraphic(pt);
-  map.centerAndZoom(pt, 12);
-  ptAct=pt;
-  */
+    dojo.connect(map, "onLoad", function()  {  map.centerAndZoom(pt,16); });
 }
+
+
+function setChecks(is_male)
+{
+  console.log(is_male);
+
+  $("input[name='field-sex']").val( is_male? 'male' : 'female' );
+  $("input[name='interested-in-men']").val( !is_male? 'interested-in-men-true' : 'interested-in-men-false');
+  $("input[name='interested-in-women']").val( is_male? 'interested-in-women-true' : 'interested-in-women-false');
+
+  $("input[name='field-sex']").eq(0).attr( 'checked', is_male );
+  $("input[name='interested-in-men']").eq(0).attr('checked', !is_male);
+  $("input[name='interested-in-women']").eq(0).attr('checked', is_male);
+
+  checkAllToggles();
+}
+
+
 
 
 (function($) {
   "use strict";
 
-  //initWebcam();
+  initWebcam();
   initForm();
 
 
@@ -182,7 +196,7 @@ function zoomToCurrentLocation(location)
 
 function initDojo()
 {
-    initMap();
+    //initMap();
 }
 
 dojo.ready(initDojo);
