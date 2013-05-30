@@ -4,7 +4,7 @@ dojo.require("esri.layers.FeatureLayer");
 dojo.require("dojo.parser");
 
 var users_fs = "http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer";
-var map;
+var map = null;
 
 function initWebcam()
 { 
@@ -156,9 +156,13 @@ function initMap()
 
 function zoomToCurrentLocation(location) 
 {
-  var pt = esri.geometry.geographicToWebMercator(
-      new esri.geometry.Point(location.coords.longitude, location.coords.latitude)
-  );
+  var pt = esri.geometry.geographicToWebMercator(new esri.geometry.Point(location.coords.longitude, location.coords.latitude));
+  userLocation = pt;
+  if( map.loaded )
+    map.centerAndZoom(pt,12);
+  else
+    dojo.connect(map, "onLoad", function()  {  map.centerAndZoom(pt,14); });
+
   /*
   addGraphic(pt);
   map.centerAndZoom(pt, 12);

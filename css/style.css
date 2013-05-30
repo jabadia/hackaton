@@ -42,11 +42,33 @@ footer
 	margin-bottom: 20px;
 }
 
+#map-container
+{
+	position: relative;
+	height: 440px;
+	width: 300px;
+}
+
 #map
 {
 	background: #ddd;
-	height: 440px;
-	width: 300px;
+	position: absolute;
+	top:0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+#map-target
+{
+	position: absolute;
+	top:0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 4;
+	pointer-events:none;
+	background: url(../images/target.png) no-repeat center center;
 }
 
 #face-canvas
