@@ -1,10 +1,12 @@
 
 dojo.require("esri.map");
 dojo.require("esri.layers.FeatureLayer");
+dojo.require("esri.graphic");
 dojo.require("dojo.parser");
 
-var users_fs = "http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer";
+var users_fs = "http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer/0";
 var map;
+var featureLayer;
 
 function initWebcam()
 { 
@@ -144,33 +146,6 @@ function initWebcam()
     captureAndRecognize();
   });
 }
-
-function initForm()
-{
-  $('#field-name').focus();
-}
-
-function initMap()
-{
-  common.localizacionActual(zoomToCurrentLocation);  
-
-  map = new esri.Map("map", {
-    basemap: "gray",
-    center: [-3.9552, 40.3035],
-    zoom: 5
-  });
-}
-
-function zoomToCurrentLocation(location) 
-{
-  var pt = esri.geometry.geographicToWebMercator(new esri.geometry.Point(location.coords.longitude, location.coords.latitude));
-  if( map.loaded )
-    map.centerAndZoom(pt,16);
-  else
-    dojo.connect(map, "onLoad", function()  {  map.centerAndZoom(pt,16); });
-}
-
-
 function setChecks(is_male)
 {
   console.log(is_male);
@@ -187,6 +162,79 @@ function setChecks(is_male)
 }
 
 
+function initForm()
+{
+  $('#field-nick').focus();
+  $('#goforit').click(function(e)
+  {
+    e.preventDefault();
+
+    // var formData = $('form').serializeArray();
+    // console.log(formData);
+    var form = $('#register-form');
+    console.log( $('#field-name').val() );
+    console.log($("input[name='field-sex']").val());
+
+    var is_male = $("input[name='field-sex']").eq(0).attr( 'checked' );
+    console.log(is_male? "Hombre":"Mujer");
+
+    var geometry = map.geographicExtent.getCenter();
+    var attributes = {
+      'NOMBRE': $('#field-name').val(),
+      'SOBRE_TI': $('#field-aboutyou').val(),
+      'EMAIL': $('#field-email').val(),
+      'TELEFONO': $('#field-phone').val(),
+      'SEXO': is_male? "Hombre" : "Mujer",
+      'BUSCAS': !is_male? "Hombre" : "Mujer",
+      'QUIERO': "Que me hagan feliz",
+      'FOTO_URL': 'no-url',
+      'Edad': $("#field-age").val(),
+      'Nick': $("#field-nick").val()
+    };
+
+    var newfeature = new esri.Graphic( geometry, null, attributes );
+    console.log(newfeature);
+
+    featureLayer.applyEdits([newfeature],null,null, function()
+      {
+        console.log("success");
+      },
+      function()
+      {
+        console.log("error");
+      }); 
+  })
+}
+
+function initMap()
+{
+  common.localizacionActual(zoomToCurrentLocation);  
+
+  map = new esri.Map("map", {
+    basemap: "gray",
+    center: [-3.9552, 40.3035],
+    zoom: 5
+  });
+
+  featureLayer = new esri.layers.FeatureLayer(users_fs,{
+    mode: esri.layers.FeatureLayer.MODE_ONSELECT,
+    outFields: ["*"]
+  });
+
+  map.addLayer(featureLayer);
+
+}
+
+function zoomToCurrentLocation(location) 
+{
+  var pt = esri.geometry.geographicToWebMercator(new esri.geometry.Point(location.coords.longitude, location.coords.latitude));
+  if( map.loaded )
+    map.centerAndZoom(pt,16);
+  else
+    dojo.connect(map, "onLoad", function()  {  map.centerAndZoom(pt,16); });
+}
+
+
 
 
 (function($) {
@@ -200,7 +248,7 @@ function setChecks(is_male)
 
 function initDojo()
 {
-    //initMap();
+    initMap();
 }
 
 dojo.ready(initDojo);
