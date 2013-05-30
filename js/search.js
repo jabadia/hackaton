@@ -101,7 +101,7 @@ function addGraphic(pt){
 function bufferizar(){
 	//define input buffer parameters
 	lyrGraphicSelect.clear();
-	if (ptAct== "undefined") {
+	if (ptAct== undefined) {
 		localizacionActual();
 	} else {
 
@@ -141,9 +141,13 @@ function queryElement(bufferGeometry) {
 
     });*/
 
+	var strQuery = "";
+	if SEXO == "Hombre" 
+
 	var queryTask = new esri.tasks.QueryTask(userConfig.datosParoURL);		
 	var query = new esri.tasks.Query();		
-	query.returnGeometry = true;		
+	query.returnGeometry = true;
+	query.where = 'SEXO = ' + $("input[name='field-sex']").attr('value') + ' AND QUIERO = ' + $("input[name='field-quiero']").attr('value') ;		
 	query.outFields = ["*"];
 	query.geometry = bufferGeometry;
 	queryTask.execute(query, showResultsInfo, error_showResultsInfo);
