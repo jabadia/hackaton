@@ -197,7 +197,7 @@ function showResultsInfo(featureSet) {
 	//remove all graphics on the maps graphics layer
 
 	//var markerSymbol = new esri.symbol.SimpleMarkerSymbol();
-   var markerSymbol  = new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE, 300,   new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID,    new dojo.Color([255,0,0]), 1),   new dojo.Color([0,255,0,0.25]));
+   var markerSymbol  = new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE, 30,   new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID,    new dojo.Color([255,0,0]), 1),   new dojo.Color([0,255,0,0.25]));
 	alert("se han econtrado "  + featureSet.features.length  + " coincidencias.");
 	if( featureSet.features.length > 0)
 	{
@@ -207,7 +207,7 @@ function showResultsInfo(featureSet) {
 			//addGraphic(feature.geometry);
 			var graphic = feature;
             graphic.setSymbol(markerSymbol);
-			lyrGraphicSelect.add(feature.geometry,markerSymbol);
+			lyrGraphicSelect.add(graphic);
 
 		});
 	}
