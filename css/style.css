@@ -15,6 +15,18 @@ footer
 	margin-top: 40px;
 }
 
+#register-form input[type="text"],
+#register-form input[type="email"],
+#register-form input[type="tel"]
+{
+	width: 286px;
+}
+
+#register-form textarea
+{
+	width: 276px;
+}
+
 
 #face-canvas
 {

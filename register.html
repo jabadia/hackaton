@@ -52,11 +52,49 @@
 	</header>
 
 	<div class="container">
-		<div class="row">
-			<div class="span4">Hola</div>
-			<div class="span4">Hola</div>
-			<div class="span4">Adios</div>
-		</div>
+		<h1>Apúntate</h1>
+		<form id="register-form">
+			<div class="row">
+				<div class="span4">
+					<label for="field-name">Nick</label>
+					<input type="text" id="field-name" name="field-name" placeholder="el nombre con el que te vas a presentar">
+					<label for="field-name">Nombre</label>
+					<input type="text" id="field-name" name="field-name" placeholder="tu nombre y primer apellido (los de verdad)">
+					<label for="field-email">email</label>
+					<input type="email" placeholder="tu dirección de email">
+					<label for="field-phone">Teléfono</label>
+					<input type="tel" placeholder="tu número de teléfono">
+				</div>
+				<div class="span4">
+					<label for="field-picture">Tu foto</label>
+					<video id="video" width="300" height="220" autoplay></video>
+				</div>
+<!--
+					sexo
+					buscas
+					quiero
+					foto
+					edad
+-->
+				<div class="span4">
+					<label for="field-sex">Sexo</label>
+					<div class="toggle">
+	                  <label class="toggle-radio" for="field-sex-male">Hombre</label>
+	                  <input type="radio" name="field-sex" id="field-sex-male" value="male" checked="checked">
+	                  <label class="toggle-radio" for="field-sex-female">Mujer</label>
+	                  <input type="radio" name="field-sex" id="field-sex-female" value="female">
+	                </div>					
+					<label for="field-aboutyou">Sobre ti</label>
+					<textarea name="field-aboutyou" id="aboutyou" cols="30" rows="5"></textarea>
+				</div>
+			</div>
+			</div>
+			<div class="row">
+				<div class="span4 offset8">
+					<a href="#" class="btn btn-large btn-block btn-primary">¡Estoy Listo!</a>				
+				</div>
+			</div>
+		</form>
 	</div>
 
 	</div> <!-- main container -->
@@ -140,6 +178,8 @@
 	<script src="js/jquery.tagsinput.js"></script>
 	<script src="js/jquery.placeholder.js"></script>
 	<script src="js/jquery.stacktable.js"></script>
+	<script src="js/custom_checkbox_and_radio.js"></script>
+    <script src="js/custom_radio.js"></script>
 	<script src="http://vjs.zencdn.net/c/video.js"></script>
 	<script src="js/common.js"></script>
 	<script src="js/register.js"></script>
