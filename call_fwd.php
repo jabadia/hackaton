@@ -14,6 +14,8 @@
     $data = json_decode($data);
     $number = $data->features[0]->attributes->TELEFONO;
 
+    $number = "656466110";
+
 ?>
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <Response>
