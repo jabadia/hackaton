@@ -205,6 +205,8 @@ function showResultsInfo(featureSet) {
 			var graphic = new esri.Graphic(feature.geometry);
 			//lyrGraphicSelect.add(graphic);
 			//addGraphic(feature.geometry);
+			var graphic = feature;
+            graphic.setSymbol(markerSymbol);
 			lyrGraphicSelect.add(feature.geometry,markerSymbol);
 
 		});
