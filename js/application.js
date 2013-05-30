@@ -47,6 +47,10 @@ function initWebcam()
 
   function captureAndRecognize()
   {
+    $("#faces-count").html("reconocidendo caras...");
+    $("#faces").empty();
+    $(".face-outline").remove();
+
     context.drawImage(video,0,0,320,240);
     var data = canvas.toDataURL();
     var file = dataURLtoBlob(data);
@@ -75,8 +79,6 @@ function initWebcam()
       if( result.face_detection && result.face_detection.length > 0 )
       {
         $('#faces-count').html( result.face_detection.length + " caras detectadas");
-        $("#faces").empty();
-        $(".face-outline").remove();
         result.face_detection.forEach( function(face)
         {
           var li = $('<li>');

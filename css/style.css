@@ -8,3 +8,18 @@
 	border: 1px solid red;
 	z-index: 3;
 }
+
+#video
+{
+	background: #ddd;
+}
+
+#canvas
+{
+	background: #ddd;
+}
+
+#snap
+{
+	margin: 100px auto;
+}
