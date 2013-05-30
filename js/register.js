@@ -1,5 +1,11 @@
 "use strict";
 
+dojo.require("esri.layers.FeatureLayer");
+
+
+var users_fs = "http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer";
+
+
 function initWebcam()
 { 
   var canvas = $('#canvas').get(0);
@@ -85,6 +91,7 @@ function initWebcam()
         $('#faces-count').html( result.face_detection.length + " caras detectadas");
         result.face_detection.forEach( function(face)
         {
+          /*
           var li = $('<li>');
           li.append( (face.sex? "Hombre": "Mujer") + "<br />");
           if( face.smile < 0.35 )
@@ -94,7 +101,13 @@ function initWebcam()
           else
             li.append("Sonriente");
           $("#faces").append(li);
+          */
+          if( face.sex > 0.5 )
+          {
 
+          }
+
+          /* cuadro */
           var face_area = $('<div>');
           face_area.css('position','absolute');
           face_area.addClass('face-outline');
@@ -127,13 +140,15 @@ function initWebcam()
 
 function initForm()
 {
+  $('#field-name').focus();
 }
 
 (function($) {
   "use strict";
 
-  initWebcam();
+  //initWebcam();
   initForm();
+  initMap();
 
 
 })(jQuery);
