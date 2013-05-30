@@ -1,10 +1,10 @@
-"use strict";
 
+dojo.require("esri.map");
 dojo.require("esri.layers.FeatureLayer");
-
+dojo.require("dojo.parser");
 
 var users_fs = "http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer";
-
+var map;
 
 function initWebcam()
 { 
@@ -143,12 +143,42 @@ function initForm()
   $('#field-name').focus();
 }
 
+function initMap()
+{
+  common.localizacionActual(zoomToCurrentLocation);  
+
+  map = new esri.Map("map", {
+    basemap: "streets",
+    center: [-3.9552, 40.3035],
+    zoom: 5
+  });
+}
+
+function zoomToCurrentLocation(location) 
+{
+  var pt = esri.geometry.geographicToWebMercator(
+      new esri.geometry.Point(location.coords.longitude, location.coords.latitude)
+  );
+  /*
+  addGraphic(pt);
+  map.centerAndZoom(pt, 12);
+  ptAct=pt;
+  */
+}
+
+
 (function($) {
   "use strict";
 
   //initWebcam();
   initForm();
-  initMap();
 
 
 })(jQuery);
+
+function initDojo()
+{
+    initMap();
+}
+
+dojo.ready(initDojo);
