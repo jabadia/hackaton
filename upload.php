@@ -1,7 +1,10 @@
 <?php
 
+	$id = time();
+	$filename = "users/img".$id.".png";
+
 	$success = file_put_contents(
-	    "img.png",
+	    $filename,
 	    base64_decode( str_replace('data:image/png;base64,', '', $_REQUEST['imgBase64']) )
     );
 

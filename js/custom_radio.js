@@ -21,6 +21,25 @@ var toggleHandler = function(toggle) {
     });
 };
 
+function checkAllToggles()
+{
+    $(".toggle").each(function(index, toggle) {
+        var toggle = toggle;
+        var radio = $(toggle).find("input");
+
+        var checkToggleState = function() {
+            if (radio.eq(0).is(":checked")) {
+                $(toggle).removeClass("toggle-off");
+            } else {
+                $(toggle).addClass("toggle-off");
+            }
+        };
+
+        checkToggleState();
+    });
+}
+
+
 $(document).ready(function() {
     $(".toggle").each(function(index, toggle) {
         toggleHandler(toggle);

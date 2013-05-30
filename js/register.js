@@ -1,10 +1,13 @@
 
 dojo.require("esri.map");
 dojo.require("esri.layers.FeatureLayer");
+dojo.require("esri.graphic");
 dojo.require("dojo.parser");
 
-var users_fs = "http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer";
-var map = null;
+var users_fs = "http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer/0";
+var map;
+var featureLayer;
+var photo;
 
 function initWebcam()
 { 
@@ -63,6 +66,7 @@ function initWebcam()
     context.drawImage(video,0,0,300,220);
     $('#canvas').css('opacity',1);
     var data = canvas.toDataURL();
+    photo = data;
     var file = dataURLtoBlob(data);
     var size = file.size;
 
@@ -86,11 +90,14 @@ function initWebcam()
       console.log('done');
       console.log(result);
 
+      var is_sad = false;
+
       if( result.face_detection && result.face_detection.length > 0 )
       {
         $('#faces-count').html( result.face_detection.length + " caras detectadas");
         result.face_detection.forEach( function(face)
         {
+          $('#capture').html('¡Te hemos reconocido!')
           /*
           var li = $('<li>');
           li.append( (face.sex? "Hombre": "Mujer") + "<br />");
@@ -102,10 +109,14 @@ function initWebcam()
             li.append("Sonriente");
           $("#faces").append(li);
           */
-          if( face.sex > 0.5 )
-          {
 
-          }
+          $("input[name='field-age']").val( face.age );
+
+          var is_male = (face.sex > 0.5)? true : false;
+          setChecks(is_male);
+
+          is_sad = (face.smile < 0.6);
+  
 
           /* cuadro */
           var face_area = $('<div>');
@@ -123,7 +134,7 @@ function initWebcam()
       window.setTimeout(function()
       {
         $('#canvas').css('opacity',0);
-        $('#capture').html('¿Quieres probar de nuevo?')
+        $('#capture').html(is_sad? '¡¡ Sonrie y vuelve a intentarlo !!' : '¡¡Muy bien!!')
           .removeClass('disabled')
           .addClass('btn-default');
         $(".face-outline").remove();
@@ -137,10 +148,91 @@ function initWebcam()
     captureAndRecognize();
   });
 }
+function setChecks(is_male)
+{
+  console.log(is_male);
+
+  $("input[name='field-sex']").val( is_male? 'male' : 'female' );
+  $("input[name='interested-in-men']").val( !is_male? 'interested-in-men-true' : 'interested-in-men-false');
+  $("input[name='interested-in-women']").val( is_male? 'interested-in-women-true' : 'interested-in-women-false');
+
+  $("input[name='field-sex']").eq(0).attr( 'checked', is_male );
+  $("input[name='interested-in-men']").eq(0).attr('checked', !is_male);
+  $("input[name='interested-in-women']").eq(0).attr('checked', is_male);
+
+  checkAllToggles();
+}
+
+
+function addFeature(photo_url)
+{  
+    // var formData = $('form').serializeArray();
+    // console.log(formData);
+    var form = $('#register-form');
+    console.log( $('#field-name').val() );
+    console.log($("input[name='field-sex']").val());
+
+    var is_male = $("input[name='field-sex']").eq(0).attr( 'checked' );
+    console.log(is_male? "Hombre":"Mujer");
+
+    var geometry = map.geographicExtent.getCenter();
+    var attributes = {
+      'NOMBRE': $('#field-name').val(),
+      'SOBRE_TI': $('#field-aboutyou').val(),
+      'EMAIL': $('#field-email').val(),
+      'TELEFONO': $('#field-phone').val(),
+      'SEXO': is_male? "Hombre" : "Mujer",
+      'BUSCAS': !is_male? "Hombre" : "Mujer",
+      'QUIERO': "Que me hagan feliz",
+      'FOTO_URL': photo_url,
+      'Edad': $("#field-age").val(),
+      'Nick': $("#field-nick").val()
+    };
+
+    var newfeature = new esri.Graphic( geometry, null, attributes );
+    console.log(newfeature);
+
+    featureLayer.applyEdits([newfeature],null,null, function()
+      {
+        console.log("success");
+      },
+      function()
+      {
+        console.log("error");
+      }
+    ); 
+}
+
 
 function initForm()
 {
-  $('#field-name').focus();
+  $('#field-nick').focus();
+  $('#goforit').click(function(e)
+  {
+    e.preventDefault();
+
+    // subo la imagen
+    var photo_url = "";
+    if( photo )
+    {
+      $.ajax({
+        type: "POST",
+        url: "upload.php",
+        data: { imgBase64: photo }
+      }).done(function(o)
+      {
+        console.log('saved');
+        console.log(o);
+        photo_url = o;
+        addFeature(photo_url);
+      });      
+    }
+    else
+    {
+      console.log('no-photo');
+      addFeature('no-photo');
+    }
+  });
 }
 
 function initMap()
@@ -148,33 +240,36 @@ function initMap()
   common.localizacionActual(zoomToCurrentLocation);  
 
   map = new esri.Map("map", {
-    basemap: "streets",
+    basemap: "gray",
     center: [-3.9552, 40.3035],
     zoom: 5
   });
+
+  featureLayer = new esri.layers.FeatureLayer(users_fs,{
+    mode: esri.layers.FeatureLayer.MODE_ONSELECT,
+    outFields: ["*"]
+  });
+
+  map.addLayer(featureLayer);
+
 }
 
 function zoomToCurrentLocation(location) 
 {
   var pt = esri.geometry.geographicToWebMercator(new esri.geometry.Point(location.coords.longitude, location.coords.latitude));
-  userLocation = pt;
   if( map.loaded )
-    map.centerAndZoom(pt,12);
+    map.centerAndZoom(pt,16);
   else
-    dojo.connect(map, "onLoad", function()  {  map.centerAndZoom(pt,14); });
-
-  /*
-  addGraphic(pt);
-  map.centerAndZoom(pt, 12);
-  ptAct=pt;
-  */
+    dojo.connect(map, "onLoad", function()  {  map.centerAndZoom(pt,16); });
 }
+
+
 
 
 (function($) {
   "use strict";
 
-  //initWebcam();
+  initWebcam();
   initForm();
 
 
