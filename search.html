@@ -13,7 +13,6 @@
 	<link rel="stylesheet" href="css/style.css">
 
 	<link rel="shortcut icon" href="images/favicon.ico">
- 	<link rel="stylesheet" href="http://serverapi.arcgisonline.com/jsapi/arcgis/3.5/js/dojo/dijit/themes/claro/claro.css">
     <link rel="stylesheet" href="http://serverapi.arcgisonline.com/jsapi/arcgis/3.5/js/esri/css/esri.css">
 	<script src="http://serverapi.arcgisonline.com/jsapi/arcgis/3.5/"></script>
 
@@ -56,17 +55,17 @@
 
 			<div class="span5">
 				<label for="field-quiero">Busco:</label>
-				<div class="toggle">
-	                <label class="toggle-radio" for="field-quiero-male">Quiero cari&ntilde;o</label>
-	                <input type="radio" name="field-quiero" id="field-quiero-male" value="male" checked="checked">
-	                <label class="toggle-radio" for="field-quiero-female">Dame cari&ntilde;o</label>
-	                <input type="radio" name="field-dane" id="field-quiero-female" value="female">
+				<div class="toggle sex-control">
+	                <label class="toggle-radio" for="field-sex-male">Quiero cari&ntilde;o</label>
+	                <input type="radio" name="field-sex" id="field-sex-male" value="quiero">
+	                <label class="toggle-radio" for="field-sex-female">Dame cari&ntilde;o</label>
+	                <input type="radio" name="field-sex" id="field-sex-female" value="dame"  checked="checked">
 	            </div>
 	                
 			</div>
 			<div class="span5">
 				<label for="field-sex">Sexo</label>
-				<div class="toggle">
+				<div class="toggle sex-control">
                   <label class="toggle-radio" for="field-sex-male">Hombre</label>
                   <input type="radio" name="field-sex" id="field-sex-male" value="male" checked="checked">
                   <label class="toggle-radio" for="field-sex-female">Mujer</label>
@@ -97,15 +96,16 @@
         <div class="row">
           <div class="span7">
             <h3 class="footer-title">LoveHere.com</h3>
-            <p>Aplicación desarrollada por bla, bla bla</p>
+            <p>Aplicación desarrollada por Esri España usando</p>
+			<p>el API de ArcGIS para Javascript.</p>
 
             <p class="pvl">
               <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://designmodo.com/flat-free/" data-text="Flat UI Free - PSD&amp;HTML User Interface Kit" data-via="designmodo" data-size="large">Tweet</a>
               <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
             </p>
 
-            <a class="footer-brand" href="http://www.esri.es" target="_blank">
-              <img src="images/esri_common/Esri_Spain_32.jpg" alt="esri.es" />
+            <a href="http://www.esri.es" target="_blank">
+              <img src="images/esri_common/PoweredBy120.png" alt="esri.es" width="120"/>
             </a>
           </div> <!-- /span8 -->
 
@@ -115,9 +115,9 @@
               <ul>
                 <li>ESRI España</li>
                 <li>ESRI Inc.</li>
-                <li>bla</li>
-                <li>bla</li>
-                <li>bla</li>
+                <li>ArcGIS for Developers</li>
+                <li>ArcGIS APIs</li>
+                <li>Javier, Francesc & Jaime</li>
               </ul>
               Go to: <a href="http://www.esri.es" target="_blank">esri.es</a>
             </div>
@@ -140,7 +140,6 @@
 	<script src="js/jquery.stacktable.js"></script>
 	<script src="http://vjs.zencdn.net/c/video.js"></script>
 	<script src="js/common.js"></script>
-	<script src="js/search.js"></script>
 
 	<!-- script de esr -->
 	<script src="http://serverapi.arcgisonline.com/jsapi/arcgis/3.5/"></script>
