@@ -85,7 +85,8 @@ function init() {
 
   var template = new esri.InfoTemplate();
   template.setTitle("<b>Candidato ${objectid}</b>");
-  template.setContent("<b>Nick:</b> ${Nick}<br/><b>Teléfono: </b><a class='phone_call' href='tel:+34518880946'>Llamar</a><br/><img class='user_photo' src='${FOTO_URL}'>");
+  var closeButton = "<br/><button dojoType='dijit.form.Button' onClick='javascript:window.close();'>Done</button>";
+  template.setContent("<b>Nick:</b> ${Nick}<br/><b>Teléfono: </b><a class='phone_call' href='tel:+34518880946'>Llamar</a><br/><img class='user_photo' src='${FOTO_URL}'>" + closeButton);
 
   featureLayer = new esri.layers.FeatureLayer(users_fs,{
     mode: esri.layers.FeatureLayer.MODE_ONDEMAND,
