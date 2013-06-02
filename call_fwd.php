@@ -17,7 +17,7 @@
     {
         $service = 'http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer/0';
         $query = '/query?where='. urlencode("TELEFONO='".$phone."'");
-        $query .= '&outFields=Nick&returnGeometry=false&f=json';
+        $query .= '&outFields='.urlencode('Nick,SEXO').'&returnGeometry=false&f=json';
         $url = $service . $query;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -45,10 +45,11 @@
     if( $user )
     {
         $from_nick = $user->attributes->Nick;
+        $voice = $user->attributes->SEXO == 'Hombre'? 'woman' : 'man';
         $to_number = "656466110"; // hardcoded to avoid demo problems
 ?>
 <Response>
-    <Say voice="woman" language="es">Hola <?php print $from_nick ?>. Bienvenido a Lofjiar punto com. Tu llamada sera transferida a la pareja seleccionada sin revelar tu numero</Say>
+    <Say voice="<?php print $voice ?>" language="es">Hola <?php print $from_nick ?>. Bienvenido a Lofjiar punto com. Tu llamada sera transferida a la pareja seleccionada sin revelar tu numero</Say>
   <Dial callerId="+34518880946">+34<?php print $to_number ?></Dial>
 </Response>
 <?php
