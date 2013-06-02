@@ -52,23 +52,52 @@
 		<div class="row">
 
 			<div class="span5">
-				<label for="ffield-quiero">¿Qu&eacute; quieres, monada?</label>
+				<label for="field-sex">¿Con qui&eacute;n?</label>
+
+					<form name="formu">
+						<input type="radio" name="group1" value="dar"> Quiero dar cari&ntilde;o<br>
+						<input type="radio" name="group1" value="recibir" checked> Necesito cari&ntilde;ito<br>
+					</form>
+
+					<!--label class="radio checked" for="radio1">
+        				<input name="radio" id="radio3" value="1" type="radio" checked="checked">
+        				<span></span>Quiero dar cari&ntilde;o
+      				</label>
+      				<label class="radio" for="radio4">
+        				<input name="radio" id="radio2" value="2" type="radio">
+        				<span></span>Necesito cari&ntilde;ito
+      				</label-->
+
+				<!--label for="field-quiero">¿Qu&eacute; quieres, monada?</label>
 				<div class="toggle quiero-control">
-	                <label class="toggle-radio" for="field-quiero-male">Quiero dar cari&ntilde;o</label>
-	                <input type="radio" name="field-quiero" id="field-quiero-male" value="Hacer feliz">
-	                <label class="toggle-radio" for="field-quiero-female">Necesito cari&ntilde;ito</label>
-	                <input type="radio" name="field-quiero" id="field-quiero-female" value="Que me hagan feliz"  checked="checked">
-	            </div>
+	                <label class="toggle-radio" for="field-quiero-dar">Quiero dar cari&ntilde;o</label>
+	                <input type="radio" name="field-quiero" id="field-quiero-dar" value="Hacer feliz">
+	                <label class="toggle-radio" for="field-quiero-recibir">Necesito cari&ntilde;ito</label>
+	                <input type="radio" name="field-quiero" id="field-quiero-recibir" value="Que me hagan feliz" checked="checked">
+	            </div-->
 	                
 			</div>
 			<div class="span5">
 				<label for="field-sex">¿Con qui&eacute;n?</label>
-				<div class="toggle sex-control">
+				<form name="formu2">
+						<input type="radio" name="group2" value="hombre" checked>hombre<br>
+						<input type="radio" name="group2" value="mujer">mujer<br>
+				</form>
+				<!--label class="radio checked" for="radio1">
+        				<input name="radio" id="radio1" value="1" type="radio" checked="checked">
+        				<span></span>Hombre
+      				</label>
+      				<label class="radio" for="radio2">
+        				<input name="radio" id="radio2" value="2" type="radio">
+        				<span></span> Mujer
+      				</label-->
+
+				<!--div class="toggle sex-control">
                   <label class="toggle-radio" for="field-sex-male">Un hombre</label>
                   <input type="radio" name="field-sex" id="field-sex-male" value="Hombre">
                   <label class="toggle-radio" for="field-sex-female">Una mujer</label>
                   <input type="radio" name="field-sex" id="field-sex-female" value="Mujer" checked="checked">
-                </div>					
+                </div-->					
 			</div>
 		</div>
 		
