@@ -72,15 +72,13 @@ function initWebcam()
 
     var post_data = new FormData();
     post_data.append('uploaded_file', file);
-    post_data.append('api_key',1234);
-    post_data.append('api_secret',5678);
-    post_data.append('jobs','face_part_emotion_gender_age');
-    post_data.append('name_space','default');
-    post_data.append('user_id','default');
+    post_data.append('api_key','61d8293305ed46cba1efa0324c41b238');
+    post_data.append('api_secret','d3f5652ac9414cf4ad6bd1fbf70ed420'); // uuuggghhhggg!!!
+    post_data.append('attributes','all');
 
     $.ajax({
       type: "POST",
-      url: "http://rekognition.com/func/api/",
+      url: "http://api.skybiometry.com/fc/faces/detect",
       data: post_data,
       processData: false,
       contentType: false,
@@ -91,54 +89,58 @@ function initWebcam()
       console.log(result);
 
       var is_sad = false;
+      var is_recognized = false;
 
-      if( result.face_detection && result.face_detection.length > 0 )
+      if( result.photos && result.photos.length > 0 )
       {
-        $('#faces-count').html( result.face_detection.length + " caras detectadas");
-        result.face_detection.forEach( function(face)
+        result.photos.forEach( function(photo)
         {
-          $('#capture').html('¡Te hemos reconocido!')
-          /*
-          var li = $('<li>');
-          li.append( (face.sex? "Hombre": "Mujer") + "<br />");
-          if( face.smile < 0.35 )
-            li.append( "Serio" );
-          else if( face.smile < 0.85 )
-            li.append( "Neutral" );
-          else
-            li.append("Sonriente");
-          $("#faces").append(li);
-          */
+          photo.tags.forEach( function(face)
+          {
+            $('#capture').html('¡Te hemos reconocido!')
 
-          $("input[name='field-age']").val( face.age );
+            $("input[name='field-age']").val( face.age );
 
-          var is_male = (face.sex > 0.5)? true : false;
-          setChecks(is_male);
+            var is_male = (face.attributes.gender.value == "male");
+            setChecks(is_male);
 
-          is_sad = (face.smile < 0.6);
-  
+            is_sad = (face.attributes.smiling.value == "false" );
+    
+            /* cuadro */
+            var face_area = $('<div>');
+            face_area.css('position','absolute');
+            face_area.addClass('face-outline');
+            face_area.css({
+              'left': (face.center.x - face.width / 2.0) * photo.width / 100.0,
+              'top' : (face.center.y - face.height / 2.0) * photo.height / 100.0,
+              'width': face.width * photo.width / 100.0,
+              'height': face.height * photo.height / 100.0});          
+            $("#face-canvas").append(face_area);
 
-          /* cuadro */
-          var face_area = $('<div>');
-          face_area.css('position','absolute');
-          face_area.addClass('face-outline');
-          face_area.css({
-            'left': face.boundingbox.tl.x,
-            'top' : face.boundingbox.tl.y,
-            'width': face.boundingbox.size.width,
-            'height': face.boundingbox.size.height});          
-          $("#face-canvas").append(face_area);
-        });
+            is_recognized = true;
+          }); // forEach(face)
+        }); // forEach(photo)
       }
 
-      window.setTimeout(function()
+      if(!is_recognized)
       {
-        $('#canvas').css('opacity',0);
-        $('#capture').html(is_sad? '¡¡ Sonrie y vuelve a intentarlo !!' : '¡¡Muy bien!!')
-          .removeClass('disabled')
-          .addClass('btn-default');
-        $(".face-outline").remove();
-      }, 1000);
+          $('#canvas').css('opacity',0);
+          $('#capture').html('¡¡Vuelve a intentarlo !!')
+            .removeClass('disabled')
+            .addClass('btn-default');
+          $(".face-outline").remove();
+      }
+      else
+      {
+        window.setTimeout(function()
+        {
+          $('#canvas').css('opacity',0);
+          $('#capture').html(is_sad? '¡¡ Sonrie y vuelve a intentarlo !!' : '¡¡Muy bien!!')
+            .removeClass('disabled')
+            .addClass('btn-default');
+          $(".face-outline").remove();
+        }, 2000);
+      }
     });  
   };
 
