@@ -4,10 +4,12 @@ dojo.require("esri.layers.FeatureLayer");
 dojo.require("esri.graphic");
 dojo.require("dojo.parser");
 
-var users_fs = "http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer/0";
+var users_fs = "http://www.esridemos.com/arcgis/rest/services/html5mobile/LoveHere_Features/FeatureServer/0";
 var map;
 var featureLayer;
 var photo;
+var is_male = false;
+var is_sad = false;
 
 function initWebcam()
 { 
@@ -72,13 +74,15 @@ function initWebcam()
 
     var post_data = new FormData();
     post_data.append('uploaded_file', file);
-    post_data.append('api_key','61d8293305ed46cba1efa0324c41b238');
-    post_data.append('api_secret','d3f5652ac9414cf4ad6bd1fbf70ed420'); // uuuggghhhggg!!!
-    post_data.append('attributes','all');
+    post_data.append('api_key',1234);
+    post_data.append('api_secret',5678);
+    post_data.append('jobs','face_part_emotion_gender_age');
+    post_data.append('name_space','default');
+    post_data.append('user_id','default');
 
     $.ajax({
       type: "POST",
-      url: "http://api.skybiometry.com/fc/faces/detect",
+      url: "http://rekognition.com/func/api/",
       data: post_data,
       processData: false,
       contentType: false,
@@ -88,59 +92,55 @@ function initWebcam()
       console.log('done');
       console.log(result);
 
-      var is_sad = false;
-      var is_recognized = false;
+      is_sad = false;
 
-      if( result.photos && result.photos.length > 0 )
+      if( result.face_detection && result.face_detection.length > 0 )
       {
-        result.photos.forEach( function(photo)
+        $('#faces-count').html( result.face_detection.length + " caras detectadas");
+        result.face_detection.forEach( function(face)
         {
-          photo.tags.forEach( function(face)
-          {
-            $('#capture').html('¡Te hemos reconocido!')
+          $('#capture').html('¡Te hemos reconocido!')
+          /*
+          var li = $('<li>');
+          li.append( (face.sex? "Hombre": "Mujer") + "<br />");
+          if( face.smile < 0.35 )
+            li.append( "Serio" );
+          else if( face.smile < 0.85 )
+            li.append( "Neutral" );
+          else
+            li.append("Sonriente");
+          $("#faces").append(li);
+          */
 
-            $("input[name='field-age']").val( face.age );
+          $("input[name='field-age']").val( face.age );
 
-            var is_male = (face.attributes.gender.value == "male");
-            setChecks(is_male);
+          var hombre = (face.sex > 0.5)? true : false;
+          setChecks(hombre);
 
-            is_sad = (face.attributes.smiling.value == "false" );
-    
-            /* cuadro */
-            var face_area = $('<div>');
-            face_area.css('position','absolute');
-            face_area.addClass('face-outline');
-            face_area.css({
-              'left': (face.center.x - face.width / 2.0) * photo.width / 100.0,
-              'top' : (face.center.y - face.height / 2.0) * photo.height / 100.0,
-              'width': face.width * photo.width / 100.0,
-              'height': face.height * photo.height / 100.0});          
-            $("#face-canvas").append(face_area);
+          is_sad = (face.smile < 0.6);
+  
 
-            is_recognized = true;
-          }); // forEach(face)
-        }); // forEach(photo)
+          /* cuadro */
+          var face_area = $('<div>');
+          face_area.css('position','absolute');
+          face_area.addClass('face-outline');
+          face_area.css({
+            'left': face.boundingbox.tl.x,
+            'top' : face.boundingbox.tl.y,
+            'width': face.boundingbox.size.width,
+            'height': face.boundingbox.size.height});          
+          $("#face-canvas").append(face_area);
+        });
       }
 
-      if(!is_recognized)
+      window.setTimeout(function()
       {
-          $('#canvas').css('opacity',0);
-          $('#capture').html('¡¡Vuelve a intentarlo !!')
-            .removeClass('disabled')
-            .addClass('btn-default');
-          $(".face-outline").remove();
-      }
-      else
-      {
-        window.setTimeout(function()
-        {
-          $('#canvas').css('opacity',0);
-          $('#capture').html(is_sad? '¡¡ Sonrie y vuelve a intentarlo !!' : '¡¡Muy bien!!')
-            .removeClass('disabled')
-            .addClass('btn-default');
-          $(".face-outline").remove();
-        }, 2000);
-      }
+        $('#canvas').css('opacity',0);
+        $('#capture').html(is_sad? '¿Estas triste? ... necesitas cariño' : '¡¡Bonita sonrisa ... reparte tu amor!!')
+          .removeClass('disabled')
+          .addClass('btn-default');
+        $(".face-outline").remove();
+      }, 2000);
     });  
   };
 
@@ -151,15 +151,15 @@ function initWebcam()
   });
 }
 
-function setChecks(is_male)
+function setChecks(valor)
 {
-  console.log(is_male);
 
-  $("input[name='field-sex']").val( is_male? 'male' : 'female' );
-  $("input[name='interested-in-men']").val( !is_male? 'interested-in-men-true' : 'interested-in-men-false');
-  $("input[name='interested-in-women']").val( is_male? 'interested-in-women-true' : 'interested-in-women-false');
+  if (is_male != valor){
+     is_male = !is_male;
+     $("input[name='field-sex']").eq(0).attr('checked', !is_male);
+     $("input[name='field-sex']").eq(1).attr('checked', is_male);
+  }
 
-  $("input[name='field-sex']").eq(0).attr( 'checked', is_male );
   $("input[name='interested-in-men']").eq(0).attr('checked', !is_male);
   $("input[name='interested-in-women']").eq(0).attr('checked', is_male);
 
@@ -171,21 +171,35 @@ function addFeature(photo_url)
     // var formData = $('form').serializeArray();
     // console.log(formData);
     var form = $('#register-form');
-    console.log( $('#field-name').val() );
-    console.log($("input[name='field-sex']").val());
+    //var is_male = $("input[name='field-sex']:checked").eq(0).val();
+    
+    var interest_male = ($("input[name='interested-in-men']:checked").val() === "true");
+    var interest_female = ($("input[name='interested-in-women']:checked").val() === "true");
+    
+    var fld_busco = "";
+    
+    if (interest_female)  {
+      if (interest_male) {
+        fld_busco = "Todo";
+      } else {
+        fld_busco = "Mujer";
+      }
+    } else {
+      if (interest_male) {
+        fld_busco = "Hombre";
+      }      
+    }
 
-    var is_male = $("input[name='field-sex']").eq(0).attr( 'checked' );
-    console.log(is_male? "Hombre":"Mujer");
-
+    
     var geometry = map.geographicExtent.getCenter();
     var attributes = {
       'NOMBRE': $('#field-name').val(),
       'SOBRE_TI': $('#field-aboutyou').val(),
       'EMAIL': $('#field-email').val(),
       'TELEFONO': $('#field-phone').val(),
-      'SEXO': is_male? "Hombre" : "Mujer",
-      'BUSCAS': !is_male? "Hombre" : "Mujer",
-      'QUIERO': "Que me hagan feliz",
+      'SEXO': is_male?"Hombre":"Mujer",
+      'BUSCAS': fld_busco,
+      'QUIERO': is_sad?"Que me hagan feliz":"Hacer feliz",
       'FOTO_URL': photo_url,
       'Edad': Math.floor($("#field-age").val()),
       'Nick': $("#field-nick").val()
@@ -204,6 +218,7 @@ function addFeature(photo_url)
         console.log("error");
       }
     ); 
+
 }
 
 
@@ -267,14 +282,20 @@ function zoomToCurrentLocation(location)
 }
 
 
-
-
+ 
 (function($) {
   "use strict";
 
   initWebcam();
   initForm();
+  
 
+  $("input[name='field-sex']").click(
+      function(){
+           is_male = !is_male;  
+      }
+  );
+  $("input[name='field-sex']").prop("checked",false).trigger("change");
 
 })(jQuery);
 
@@ -282,5 +303,8 @@ function initDojo()
 {
     initMap();
 }
+
+
+
 
 dojo.ready(initDojo);

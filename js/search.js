@@ -5,6 +5,8 @@ dojo.require("esri.tasks.geometry");
 
 dojo.require("dojo.parser");
 dojo.require("esri.dijit.BasemapGallery");
+dojo.require("esri.dijit.PopupMobile");
+
 
 var map;
 var graphic;
@@ -12,25 +14,20 @@ var currLocation;
 var ptAct;
 var featureLayer;
 var lyrGraphicSelect;
+var is_male=true;
+var is_dar=true;
 
 
-$("#localizar").click(function() {
-	localizacionActual();
-});
 
-$("#buscar").click(function() {
-	bufferizar();
-});
-
-$("#adedo").click(function() {
-	activarClickOnMap();
-});
 
 function init() {
+
+	var popup = new esri.dijit.PopupMobile(null, dojo.create("div"));
 	map = new esri.Map("map",{
 		basemap: "streets", 
 		center: [-3.9552, 40.3035],
-    	zoom: 5
+    	zoom: 5,
+    	infoWindow:popup
 	});
 
 	lyrGraphicSelect = new esri.layers.GraphicsLayer();
@@ -38,14 +35,13 @@ function init() {
 
 	var infoTemplate = new esri.InfoTemplate("${NOMBRE}", '<img src="${FOTO_URL}" alt="${SOBRE_TI}" height="42" width="42">');
 
-	featureLayer = new esri.layers.FeatureLayer("http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer/0",{
+	featureLayer = new esri.layers.FeatureLayer("http://www.esridemos.com/arcgis/rest/services/html5mobile/LoveHere_Features/FeatureServer/0",{
 		mode: esri.layers.FeatureLayer.MODE_SNAPSHOT,
 		outFields: ["*"],
 		infoTemplate: infoTemplate
 	});
 
 	map.addLayer(featureLayer);
-	
 
 }
 
@@ -149,48 +145,30 @@ function showBuffer(geometries) {
 	);
 
 
-	dojo.forEach(geometries, function(geometry) {
-		var graphic = new esri.Graphic(geometry,symbol);
+		var graphic = new esri.Graphic(geometries[0],symbol);
 		lyrGraphicSelect.add(graphic);
-		queryElement(geometry);
-		map.setExtent(geometry.getExtent());
-	});
-
+		queryElement(geometries[0]);
+		map.setExtent(geometries[0].getExtent());
+	
 }		
 
 function queryElement(bufferGeometry) {
-	var queryTask = new esri.tasks.QueryTask("http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer/0");		
+	var queryTask = new esri.tasks.QueryTask("http://espre63:6080/arcgis/rest/services/HTML5mobile/LoveHere_Features/FeatureServer/0");	
 	var query = new esri.tasks.Query();		
 	query.returnGeometry = true;
 
-	var str = "";
+	var form = $('#search-form');
+
+	var strQ =  is_male?"Hombre":"Mujer"; 
+	var strS =  is_dar?"Hacer feliz":"Que me hagan feliz"; 
+	var str = " SEXO = '" +  strS + "'";
+	str = str + " AND QUIERO = '" + strQ + "'";
 	
-	console.log(document.formu.group1[0].checked);
-	console.log(document.formu2.group2[0].checked);
-	
-	if (document.formu2.group2[0].checked)
-			str = "SEXO = 'Hombre'";
-	else
-			str = "SEXO = 'Mujer'";
-
-
-	var paso2 =  $("input[id='radio4']").attr('checked');
-	//alert (paso2);
-	if (!document.formu.group1[0].checked)
-			str = str + "AND QUIERO = 'Que me hagan feliz'";
-	else
-			str = str + "AND QUIERO = 'Hacer feliz'";
-
-	//query.where = "SEXO = '" + $("input[name='field-sex']").attr('value') + "' AND QUIERO = '" + $("input[name='field-quiero']").attr('value') + "'" ;
 	query.where = str;
 	console.log(query.where);
 	query.outFields = ["*"];
 	query.geometry = bufferGeometry;
 	queryTask.execute(query, showResultsInfo, error_showResultsInfo);
-
-	/*featureLayer.selectFeatures(query, esri.layers.FeatureLayer.SELECTION_NEW, function(results){
-    
-          });*/
 }
 
 function showResultsInfo(featureSet) {
@@ -198,7 +176,7 @@ function showResultsInfo(featureSet) {
 
 	//var markerSymbol = new esri.symbol.SimpleMarkerSymbol();
    var markerSymbol  = new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE, 30,   new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID,    new dojo.Color([255,0,0]), 1),   new dojo.Color([0,255,0,0.25]));
-	alert("se han econtrado "  + featureSet.features.length  + " coincidencias.");
+	//alert("se han econtrado "  + featureSet.features.length  + " coincidencias.");
 	if( featureSet.features.length > 0)
 	{
 		dojo.forEach(featureSet.features,function(feature) {
@@ -218,4 +196,38 @@ function error_showResultsInfo(featureSet) {
 	alert("error en query");
 }
 
-dojo.ready(init);
+
+$(document).ready(function() {
+ // executes when HTML-Document is loaded and DOM is ready
+	jqueryLoaded = true;
+
+	$("#localizar").click(function() {
+		localizacionActual();
+	});
+
+	$("#buscar").click(function() {
+		bufferizar();
+	});
+
+	$("#adedo").click(function() {
+		activarClickOnMap();
+	});
+
+	$("input[name='field-sex']").click(
+      function(){
+           is_male = !is_male;  
+      }
+  	);
+  	$("input[name='field-sex']").prop("checked",false).trigger("change");
+
+	$("input[name='field-quiero']").click(
+      function(){
+           is_dar = !is_dar;  
+      }
+  	);
+  	$("input[name='field-quiero']").prop("checked",false).trigger("change");
+
+
+	dojo.ready(init);
+
+});

@@ -64,7 +64,7 @@ dojo.require("esri.dijit.AttributeInspector-all");
 dojo.require("dijit.form.ComboBox");
 dojo.require("esri.dijit.PopupMobile");
 
-var users_fs = "http://services1.arcgis.com/w5PNyOikLERl9lIp/arcgis/rest/services/LoveHere_Features/FeatureServer/0";
+var users_fs = "http://www.esridemos.com/arcgis/rest/services/html5mobile/LoveHere_Features/FeatureServer";
 
 var map,
     featureLayer;
@@ -85,8 +85,7 @@ function init() {
 
   var template = new esri.InfoTemplate();
   template.setTitle("<b>Candidato ${objectid}</b>");
-  var closeButton = "<br/><button dojoType='dijit.form.Button' onClick='javascript:window.close();'>Done</button>";
-  template.setContent("<b>Nick:</b> ${Nick}<br/><b>Teléfono: </b><a class='phone_call' href='tel:+34518880946'>Llamar</a><br/><img class='user_photo' src='${FOTO_URL}'>" + closeButton);
+  template.setContent("<b>Nick:</b> ${Nick}<br/><b>Teléfono: </b><a class='phone_call' href='tel:+34518880946'>Llamar</a><br/><img class='user_photo' src='${FOTO_URL}'>");
 
   featureLayer = new esri.layers.FeatureLayer(users_fs,{
     mode: esri.layers.FeatureLayer.MODE_ONDEMAND,
