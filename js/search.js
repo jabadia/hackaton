@@ -33,7 +33,7 @@ function init() {
 	lyrGraphicSelect = new esri.layers.GraphicsLayer();
 	map.addLayer(lyrGraphicSelect);
 
-	var infoTemplate = new esri.InfoTemplate("${NOMBRE}", '<img src="${FOTO_URL}" alt="${SOBRE_TI}" height="42" width="42">');
+	var infoTemplate = new esri.InfoTemplate("${NOMBRE}", 'Soy ${SEXO} Busco ${BUSCAS} y quiero ${QUIERO} <BR> <img src="${FOTO_URL}" alt="${SOBRE_TI}" >');
 
 	featureLayer = new esri.layers.FeatureLayer("http://www.esridemos.com/arcgis/rest/services/html5mobile/LoveHere_Features/FeatureServer/0",{
 		mode: esri.layers.FeatureLayer.MODE_SNAPSHOT,
@@ -114,8 +114,6 @@ function addGraphic(pt){
 function bufferizar(){
 	//define input buffer parameters
 	lyrGraphicSelect.clear();
-
-	
 	if (ptAct== undefined) {
 		localizacionActual();
 	} else {
@@ -123,9 +121,6 @@ function bufferizar(){
 	var geometryService = new esri.tasks.GeometryService("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
 		var params = new esri.tasks.BufferParameters();
 		params.geometries = [ ptAct ];
-
-		//buffer in linear units such as meters, km, miles etc.
-		//params.distances = [$("input[name='field-sex']").attr('value')];
 		var valorBuff =$("input[name='distanciaBuffer']").attr('value');
 		params.distances = JSON.parse("[" + valorBuff + "]");
 		params.unit = esri.tasks.GeometryService.UNIT_KILOMETER;
@@ -144,50 +139,47 @@ function showBuffer(geometries) {
 		new dojo.Color([0,0,255,0.35])
 	);
 
-
-		var graphic = new esri.Graphic(geometries[0],symbol);
+	dojo.forEach(geometries, function(geometry) {
+		var graphic = new esri.Graphic(geometry,symbol);
 		lyrGraphicSelect.add(graphic);
-		queryElement(geometries[0]);
-		map.setExtent(geometries[0].getExtent());
-	
+		queryElement(geometry);
+		map.setExtent(geometry.getExtent());
+	});
 }		
 
 function queryElement(bufferGeometry) {
-	var queryTask = new esri.tasks.QueryTask("http://espre63:6080/arcgis/rest/services/HTML5mobile/LoveHere_Features/FeatureServer/0");	
+	var geom = new esri.geometry.Polygon(bufferGeometry);
+	var queryTask = new esri.tasks.QueryTask("http://www.esridemos.com/arcgis/rest/services/html5mobile/LoveHere_Features/FeatureServer/0");	
 	var query = new esri.tasks.Query();		
 	query.returnGeometry = true;
-
 	var form = $('#search-form');
-
-	var strQ =  is_male?"Hombre":"Mujer"; 
-	var strS =  is_dar?"Hacer feliz":"Que me hagan feliz"; 
+	var strS =  is_male?"Hombre":"Mujer"; 
+	var strQ =  !is_dar?"Hacer feliz":"Que me hagan feliz"; 
 	var str = " SEXO = '" +  strS + "'";
 	str = str + " AND QUIERO = '" + strQ + "'";
 	
 	query.where = str;
 	console.log(query.where);
 	query.outFields = ["*"];
-	query.geometry = bufferGeometry;
+	query.geometry = geom;
 	queryTask.execute(query, showResultsInfo, error_showResultsInfo);
 }
 
 function showResultsInfo(featureSet) {
 	//remove all graphics on the maps graphics layer
 
-	//var markerSymbol = new esri.symbol.SimpleMarkerSymbol();
-   var markerSymbol  = new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE, 30,   new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID,    new dojo.Color([255,0,0]), 1),   new dojo.Color([0,255,0,0.25]));
-	//alert("se han econtrado "  + featureSet.features.length  + " coincidencias.");
+	var markerSymbol  = new esri.symbol.SimpleMarkerSymbol(esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE, 30,   new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID,    new dojo.Color([255,0,0]), 1),   new dojo.Color([0,255,0,0.25]));
 	if( featureSet.features.length > 0)
 	{
 		dojo.forEach(featureSet.features,function(feature) {
 			var graphic = new esri.Graphic(feature.geometry);
-			//lyrGraphicSelect.add(graphic);
-			//addGraphic(feature.geometry);
 			var graphic = feature;
             graphic.setSymbol(markerSymbol);
 			lyrGraphicSelect.add(graphic);
 
 		});
+	} else {
+		alert("Sin coincidencias.");
 	}
 }
 

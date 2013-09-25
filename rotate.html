@@ -174,8 +174,6 @@
               map.infoWindow.setFeatures([evt.graphic]);
             });
 
-            map.addLayer(featureLayer);
-            map.infoWindow.resize(185, 100);
 
           on(map, "load", mapLoadHandler);
           loadCompass();
@@ -184,6 +182,9 @@
         // The HTML5 geolocation API is used to get the user's current position.
         function mapLoadHandler() {
           on(window, 'resize', map, map.resize);
+		  map.addLayer(featureLayer);
+          map.infoWindow.resize(185, 100);
+
           // check if geolocaiton is supported
           if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(zoomToLocation, locationError);

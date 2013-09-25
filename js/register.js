@@ -156,8 +156,8 @@ function setChecks(valor)
 
   if (is_male != valor){
      is_male = !is_male;
-     $("input[name='field-sex']").eq(0).attr('checked', !is_male);
-     $("input[name='field-sex']").eq(1).attr('checked', is_male);
+     $("input[name='field-sex']").eq(0).attr('checked', is_male);
+     $("input[name='field-sex']").eq(1).attr('checked', !is_male);
   }
 
   $("input[name='interested-in-men']").eq(0).attr('checked', !is_male);
@@ -292,10 +292,15 @@ function zoomToCurrentLocation(location)
 
   $("input[name='field-sex']").click(
       function(){
-           is_male = !is_male;  
+           is_male = !is_male;
+          $("input[name='field-sex']").eq(0).attr('checked', !is_male);
+          $("input[name='field-sex']").eq(1).attr('checked', is_male);
+          checkAllToggles();  
       }
   );
-  $("input[name='field-sex']").prop("checked",false).trigger("change");
+
+
+  //$("input[name='field-sex']").prop("checked",false).trigger("change");
 
 })(jQuery);
 
